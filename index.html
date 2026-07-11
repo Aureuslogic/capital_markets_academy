@@ -223,6 +223,26 @@ footer{border-top:1px solid var(--line);padding:52px 0 40px;background:var(--pan
 .fcol a{display:block;padding:4px 0}
 .fcol a:hover{color:var(--gold)}
 .disclaimer{font-size:12px;color:#6c7681;border-top:1px solid var(--line);padding-top:26px;line-height:1.7}
+
+/* MENTORSHIP FORM */
+button.btn{font-family:inherit;cursor:pointer}
+.modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.open{display:flex}
+.modal{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:20px;padding:34px;max-width:520px;width:100%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.modal h3{font-size:24px;margin-bottom:8px}
+.modal .sub{margin-bottom:24px;font-size:15px}
+.modal-close{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--muted);font-size:28px;line-height:1;cursor:pointer;padding:4px 8px}
+.modal-close:hover{color:var(--text)}
+.form-field{margin-bottom:18px}
+.form-field label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text)}
+.form-field input,.form-field textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-family:inherit;font-size:14px}
+.form-field input:focus,.form-field textarea:focus{outline:none;border-color:rgba(47,210,140,.55)}
+.form-field textarea{min-height:110px;resize:vertical}
+.form-note{font-size:12px;color:var(--muted);margin-top:14px}
+.form-status{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:14px;display:none}
+.form-status.show{display:block}
+.form-status.success{background:rgba(47,210,140,.12);border:1px solid rgba(47,210,140,.35);color:var(--gold)}
+.form-status.error{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.35);color:#f3a8ab}
 </style>
 </head>
 <body>
@@ -246,7 +266,7 @@ Capital Markets Academy
 <a href="#faq">FAQ</a>
 <a href="https://www.capitalmarketsacademy.com/about-us/">About</a>
 </div>
-<a class="btn btn-gold" href="https://ngmttsdancenlemsebvof-free.10to8.com/" style="padding:11px 22px">Join Now</a>
+<a class="btn btn-gold" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta" style="padding:11px 22px">Join Now</a>
 </div>
 </nav>
 
@@ -418,7 +438,7 @@ What each state means, and what it requires of you, is taught inside the Academy
 <li>Weekly portfolio review of your trades</li>
 <li>Full EIT&trade; protocol training &amp; accountability group</li>
 </ul>
-<a class="btn btn-gold" href="https://ngmttsdancenlemsebvof-free.10to8.com/">Apply for Mentorship</a>
+<button type="button" class="btn btn-gold" data-open-mentorship-form>Apply for Mentorship</button>
 </div>
 <div class="plan">
 <h3>Monthly Rolling &amp; 1-on-1</h3>
@@ -526,7 +546,7 @@ Forex trading courses in London, across the UK and online worldwide. Live forex 
 <a href="https://www.capitalmarketsacademy.com/about-us/">About Us</a>
 <a href="https://www.capitalmarketsacademy.com/blog/">Blog</a>
 <a href="https://www.capitalmarketsacademy.com/contact/">Contact</a>
-<a href="https://ngmttsdancenlemsebvof-free.10to8.com/">Join Now</a>
+<a href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Join Now</a>
 </div>
 </div>
 <div class="disclaimer">
@@ -535,6 +555,115 @@ Educational use only. Nothing on this site constitutes financial advice. Trading
 </div>
 </div>
 </footer>
+
+<div class="modal-overlay" id="mentorship-modal" aria-hidden="true">
+<div class="modal" role="dialog" aria-labelledby="mentorship-title">
+<button type="button" class="modal-close" id="close-mentorship-form" aria-label="Close">&times;</button>
+<h3 id="mentorship-title">Apply for Inner Circle Mentorship</h3>
+<p class="sub">Complete the form below. Your application will be saved and sent to our team at aiacademyforbeginners@gmail.com.</p>
+<form id="mentorship-form">
+<div class="form-field">
+<label for="mentorship-name">Name</label>
+<input id="mentorship-name" name="name" type="text" required autocomplete="name">
+</div>
+<div class="form-field">
+<label for="mentorship-email">Email</label>
+<input id="mentorship-email" name="email" type="email" required autocomplete="email">
+</div>
+<div class="form-field">
+<label for="mentorship-phone">Phone number</label>
+<input id="mentorship-phone" name="phone" type="tel" required autocomplete="tel">
+</div>
+<div class="form-field">
+<label for="mentorship-why">Why do you want to join our program?</label>
+<textarea id="mentorship-why" name="why" required></textarea>
+</div>
+<button type="submit" class="btn btn-gold" style="width:100%">Submit Application</button>
+<p class="form-note">Applications are reviewed by the Capital Markets Academy team.</p>
+<div class="form-status" id="mentorship-status" role="status"></div>
+</form>
+</div>
+</div>
+
+<script>
+const MENTORSHIP_FORM_URL = 'https://script.google.com/macros/s/AKfycbzGjOWJJzt0y3IWp7y-q99en0w5aT4PTLT-AD2aqxFuQPo4KrlnVZgyGsfZckLLH-7g9g/exec';
+const modal = document.getElementById('mentorship-modal');
+const form = document.getElementById('mentorship-form');
+const status = document.getElementById('mentorship-status');
+
+function openMentorshipForm() {
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  form.querySelector('input, textarea, button')?.focus();
+}
+
+function closeMentorshipForm() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function showStatus(message, type) {
+  status.textContent = message;
+  status.className = 'form-status show ' + type;
+}
+
+document.querySelectorAll('[data-open-mentorship-form]').forEach(function(btn) {
+  btn.addEventListener('click', openMentorshipForm);
+});
+
+document.getElementById('close-mentorship-form').addEventListener('click', closeMentorshipForm);
+
+modal.addEventListener('click', function(e) {
+  if (e.target === modal) closeMentorshipForm();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && modal.classList.contains('open')) closeMentorshipForm();
+});
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  status.className = 'form-status';
+
+  if (!MENTORSHIP_FORM_URL) {
+    showStatus('Form is not connected yet. Add your Google Sheets script URL to MENTORSHIP_FORM_URL in index.html.', 'error');
+    return;
+  }
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  const payload = {
+    name: form.name.value.trim(),
+    email: form.email.value.trim(),
+    phone: form.phone.value.trim(),
+    why: form.why.value.trim()
+  };
+
+  try {
+    const response = await fetch(MENTORSHIP_FORM_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.error || 'Submission failed');
+
+    form.reset();
+    showStatus('Thank you. Your application has been submitted. We will be in touch soon.', 'success');
+    setTimeout(closeMentorshipForm, 2500);
+  } catch (err) {
+    showStatus('Something went wrong. Please try again or email aiacademyforbeginners@gmail.com.', 'error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Application';
+  }
+});
+</script>
 
 </body>
 </html>
