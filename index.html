@@ -243,7 +243,10 @@ button.btn{font-family:inherit;cursor:pointer}
 .form-status.show{display:block}
 .form-status.success{background:rgba(47,210,140,.12);border:1px solid rgba(47,210,140,.35);color:var(--gold)}
 .form-status.error{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.35);color:#f3a8ab}
+.hp-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.turnstile-wrap{margin:4px 0 18px;min-height:65px}
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -561,10 +564,14 @@ Spread bets and CFDs are complex instruments and come with a high risk of losing
 <button type="button" class="modal-close" id="close-mentorship-form" aria-label="Close">&times;</button>
 <h3 id="mentorship-title">Apply for Inner Circle Mentorship</h3>
 <p class="sub">Complete the form below. Your application will be saved and sent to our team at aiacademyforbeginners@gmail.com.</p>
-<form id="mentorship-form">
+<form id="mentorship-form" novalidate>
+<div class="hp-field" aria-hidden="true">
+<label for="mentorship-website">Website</label>
+<input id="mentorship-website" name="website" type="text" tabindex="-1" autocomplete="off">
+</div>
 <div class="form-field">
 <label for="mentorship-name">Name</label>
-<input id="mentorship-name" name="name" type="text" required autocomplete="name">
+<input id="mentorship-name" name="name" type="text" required autocomplete="name" minlength="2" maxlength="80">
 </div>
 <div class="form-field">
 <label for="mentorship-email">Email</label>
@@ -576,8 +583,9 @@ Spread bets and CFDs are complex instruments and come with a high risk of losing
 </div>
 <div class="form-field">
 <label for="mentorship-why">Why do you want to join our program?</label>
-<textarea id="mentorship-why" name="why" required></textarea>
+<textarea id="mentorship-why" name="why" required minlength="30" maxlength="2000" placeholder="Tell us about your trading experience and what you hope to gain (at least a few sentences)."></textarea>
 </div>
+<div class="turnstile-wrap" id="mentorship-turnstile"></div>
 <button type="submit" class="btn btn-gold" style="width:100%">Submit Application</button>
 <p class="form-note">Applications are reviewed by the Capital Markets Academy team.</p>
 <div class="form-status" id="mentorship-status" role="status"></div>
@@ -586,22 +594,75 @@ Spread bets and CFDs are complex instruments and come with a high risk of losing
 </div>
 
 <script>
-const MENTORSHIP_FORM_URL = 'https://script.google.com/macros/s/AKfycbzGjOWJJzt0y3IWp7y-q99en0w5aT4PTLT-AD2aqxFuQPo4KrlnVZgyGsfZckLLH-7g9g/exec';
+const MENTORSHIP_FORM_URL = 'https://script.google.com/macros/s/AKfycbxu4zcR_b8bjLw9edO4HWYUpQD6RZKzV95Nju9dT5Tbs_NW0xMUC-ImjRsqtwr0fpHtcw/exec';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAEiHBXDtP_QkzGgX';
+const MIN_FORM_SECONDS = 4;
+
 const modal = document.getElementById('mentorship-modal');
 const form = document.getElementById('mentorship-form');
 const status = document.getElementById('mentorship-status');
+const turnstileMount = document.getElementById('mentorship-turnstile');
+let formStartedAt = 0;
+let turnstileWidgetId = null;
+
+function renderTurnstile() {
+  if (!window.turnstile || !TURNSTILE_SITE_KEY || TURNSTILE_SITE_KEY.indexOf('PASTE_') === 0) return;
+  turnstileMount.innerHTML = '';
+  turnstileWidgetId = window.turnstile.render(turnstileMount, {
+    sitekey: TURNSTILE_SITE_KEY,
+    theme: 'dark'
+  });
+}
+
+function resetTurnstile() {
+  if (window.turnstile && turnstileWidgetId !== null) {
+    window.turnstile.reset(turnstileWidgetId);
+  }
+}
+
+function getTurnstileToken() {
+  if (!TURNSTILE_SITE_KEY || TURNSTILE_SITE_KEY.indexOf('PASTE_') === 0) return '';
+  const input = turnstileMount.querySelector('input[name="cf-turnstile-response"]');
+  return input ? input.value : '';
+}
+
+function countWords(value) {
+  return value.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function validateFormFields() {
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  const phone = form.phone.value.trim();
+  const why = form.why.value.trim();
+
+  if (name.length < 2) return 'Please enter your full name.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return 'Please enter a valid email address.';
+  if (phone.replace(/\D/g, '').length < 7) return 'Please enter a valid phone number.';
+  if (why.length < 30 || countWords(why) < 3) {
+    return 'Please write at least a few sentences about why you want to join.';
+  }
+  return '';
+}
 
 function openMentorshipForm() {
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  form.querySelector('input, textarea, button')?.focus();
+  formStartedAt = Date.now();
+  status.className = 'form-status';
+  status.textContent = '';
+  renderTurnstile();
+  form.querySelector('#mentorship-name')?.focus();
 }
 
 function closeMentorshipForm() {
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  formStartedAt = 0;
+  turnstileMount.innerHTML = '';
+  turnstileWidgetId = null;
 }
 
 function showStatus(message, type) {
@@ -632,6 +693,34 @@ form.addEventListener('submit', async function(e) {
     return;
   }
 
+  if (TURNSTILE_SITE_KEY.indexOf('PASTE_') === 0) {
+    showStatus('Form protection is not configured yet. Add your Turnstile site key in index.html.', 'error');
+    return;
+  }
+
+  const validationError = validateFormFields();
+  if (validationError) {
+    showStatus(validationError, 'error');
+    return;
+  }
+
+  if (form.website.value.trim()) {
+    showStatus('Thank you. Your application has been submitted. We will be in touch soon.', 'success');
+    setTimeout(closeMentorshipForm, 2500);
+    return;
+  }
+
+  if (!formStartedAt || Date.now() - formStartedAt < MIN_FORM_SECONDS * 1000) {
+    showStatus('Please take a moment to complete the form before submitting.', 'error');
+    return;
+  }
+
+  const turnstileToken = getTurnstileToken();
+  if (!turnstileToken) {
+    showStatus('Please complete the verification check below.', 'error');
+    return;
+  }
+
   const submitBtn = form.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
@@ -640,7 +729,10 @@ form.addEventListener('submit', async function(e) {
     name: form.name.value.trim(),
     email: form.email.value.trim(),
     phone: form.phone.value.trim(),
-    why: form.why.value.trim()
+    why: form.why.value.trim(),
+    website: form.website.value.trim(),
+    formStartedAt: formStartedAt,
+    turnstileToken: turnstileToken
   };
 
   try {
@@ -657,12 +749,19 @@ form.addEventListener('submit', async function(e) {
     showStatus('Thank you. Your application has been submitted. We will be in touch soon.', 'success');
     setTimeout(closeMentorshipForm, 2500);
   } catch (err) {
-    showStatus('Something went wrong. Please try again or email aiacademyforbeginners@gmail.com.', 'error');
+    showStatus(err.message || 'Something went wrong. Please try again or email aiacademyforbeginners@gmail.com.', 'error');
+    resetTurnstile();
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Application';
   }
 });
+
+if (window.turnstile) {
+  renderTurnstile();
+} else {
+  window.addEventListener('load', renderTurnstile);
+}
 </script>
 
 </body>
