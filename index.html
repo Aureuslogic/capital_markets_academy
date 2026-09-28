@@ -568,6 +568,7 @@ Spread bets and CFDs are complex instruments and come with a high risk of losing
 <div class="hp-field" aria-hidden="true">
 <label for="mentorship-website">Website</label>
 <input id="mentorship-website" name="website" type="text" tabindex="-1" autocomplete="off">
+<input type="text" name="_gotcha" tabindex="-1" autocomplete="off">
 </div>
 <div class="form-field">
 <label for="mentorship-name">Name</label>
@@ -594,7 +595,7 @@ Spread bets and CFDs are complex instruments and come with a high risk of losing
 </div>
 
 <script>
-const MENTORSHIP_FORM_URL = 'https://script.google.com/macros/s/AKfycbxu4zcR_b8bjLw9edO4HWYUpQD6RZKzV95Nju9dT5Tbs_NW0xMUC-ImjRsqtwr0fpHtcw/exec';
+const MENTORSHIP_FORM_URL = 'https://formspree.io/f/meewwqvk';
 const TURNSTILE_SITE_KEY = '0x4AAAAAAEiHBXDtP_QkzGgX';
 const MIN_FORM_SECONDS = 4;
 
@@ -689,7 +690,7 @@ form.addEventListener('submit', async function(e) {
   status.className = 'form-status';
 
   if (!MENTORSHIP_FORM_URL) {
-    showStatus('Form is not connected yet. Add your Google Sheets script URL to MENTORSHIP_FORM_URL in index.html.', 'error');
+    showStatus('Form is not connected yet.', 'error');
     return;
   }
 
@@ -704,7 +705,8 @@ form.addEventListener('submit', async function(e) {
     return;
   }
 
-  if (form.website.value.trim()) {
+  const gotcha = form.querySelector('[name="_gotcha"]');
+  if (form.website.value.trim() || (gotcha && gotcha.value.trim())) {
     showStatus('Thank you. Your application has been submitted. We will be in touch soon.', 'success');
     setTimeout(closeMentorshipForm, 2500);
     return;
@@ -729,21 +731,24 @@ form.addEventListener('submit', async function(e) {
     name: form.name.value.trim(),
     email: form.email.value.trim(),
     phone: form.phone.value.trim(),
-    why: form.why.value.trim(),
-    website: form.website.value.trim(),
-    formStartedAt: formStartedAt,
-    turnstileToken: turnstileToken
+    message: form.why.value.trim(),
+    _replyto: form.email.value.trim(),
+    _subject: 'New Inner Circle Mentorship Application',
+    form_source: 'Capital Markets Academy - Inner Circle Mentorship'
   };
 
   try {
     const response = await fetch(MENTORSHIP_FORM_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify(payload)
     });
 
     const result = await response.json();
-    if (!response.ok || !result.success) throw new Error(result.error || 'Submission failed');
+    if (!response.ok || result.ok !== true) throw new Error(result.error || 'Submission failed');
 
     form.reset();
     showStatus('Thank you. Your application has been submitted. We will be in touch soon.', 'success');
