@@ -41,7 +41,7 @@
 "itemListElement": [
 {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Market Recruit", "description": "Beginner forex trading course covering price action, market structure and a rules-based trading plan.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "397", "priceCurrency": "GBP"},
 {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Trading Desk", "description": "Monthly forex education membership: one 90-minute live session a month, the Trading Library, an AI trading assistant, and training in news and fundamentals, technical analysis and emotional discipline.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "97", "priceCurrency": "GBP", "priceSpecification": {"@type": "UnitPriceSpecification", "price": "97", "priceCurrency": "GBP", "billingDuration": "P1M"}},
-{"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Inner Circle Live Mentorship", "description": "Live daily forex mentorship with signals, portfolio reviews and full EIT framework training.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}}
+{"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Inner Circle Live Mentorship", "description": "Live daily forex mentorship with portfolio reviews and full EIT framework training. Entry by application.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "availability": "https://schema.org/LimitedAvailability", "eligibleCustomerType": "By application"}
 ]
 }
 }
@@ -259,6 +259,7 @@ button.btn{font-family:inherit;cursor:pointer}
 .form-status.error{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.35);color:#f3a8ab}
 .hp-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
 .turnstile-wrap{margin:4px 0 18px;min-height:65px}
+@media(max-width:560px){.nav-in{gap:12px}.logo{font-size:14.5px;gap:7px;white-space:nowrap}.logo .dot{width:7px;height:7px}.logo .badge-eit{display:none}.nav-in .btn{white-space:nowrap;padding:9px 16px!important;font-size:14px}}
 </style>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
@@ -276,9 +277,9 @@ Capital Markets Academy
 <span class="badge-eit">EIT&trade;</span>
 </a>
 <div class="nav-links">
-<a href="#framework">The EIT Framework</a>
+<a href="/eit-framework/">The EIT Framework</a>
 <a href="#system">The System</a>
-<a href="#programs">Programs</a>
+<a href="#programs">Programmes</a>
 <a href="#podcast">Podcast</a>
 <a href="#faq">FAQ</a>
 <a href="about-us/">About</a>
@@ -354,7 +355,7 @@ What each state means, and what it requires of you, is taught inside the Academy
 <div class="wrap">
 <span class="kicker">What we train</span>
 <h2>A complete forex education: technical skill, market awareness, emotional mastery.</h2>
-<p class="sub">Over 5,000 UK traders have learned all three with us, held together by one proprietary system: the Aulteus Logic&trade; EIT&trade; framework.</p>
+<p class="sub">Over 5,000 UK traders have learned all three with us, held together by one proprietary system: the Aulteus Logic&trade; EIT&trade; framework. <a href="/eit-framework/" style="color:var(--gold)">What is the EIT framework?</a></p>
 <div class="cards3">
 <div class="lv">
 <span class="num">PILLAR 01</span>
@@ -430,7 +431,7 @@ What each state means, and what it requires of you, is taught inside the Academy
 <div class="wrap">
 <span class="kicker">Forex Trading Courses</span>
 <h2>Choose how you learn to trade.</h2>
-<p class="sub">Every program is built on the EIT&trade; framework, live coaching from traders who trade daily, and a community that holds you accountable.</p>
+<p class="sub">Every programme is built on the EIT&trade; framework, live coaching from traders who trade daily, and a community that holds you accountable.</p>
 <div class="plans">
 <div class="plan">
 <h3>The Market Recruit</h3>
@@ -496,6 +497,11 @@ What each state means, and what it requires of you, is taught inside the Academy
 </div>
 <div class="pod-embed">
 <iframe style="border-radius:12px;display:block" src="https://open.spotify.com/embed/episode/41jG06LFTWimHXVDnbbsFV?utm_source=generator" width="100%" height="232" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Capital Markets Academy Podcast"></iframe>
+<div class="pod-notes" style="margin-top:18px;font-size:14px;line-height:1.7;color:var(--muted)">
+<b style="color:var(--text);display:block;margin-bottom:4px">Featured episode: How to trade using Forex Factory</b>
+From <i>Learn to Trade with Sam Onigbanjo</i> (10 minutes). Sam explains how to use everyday economic news and the Forex Factory calendar to plan the timing of trade entries, so the news works for your plan rather than against it.
+</div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"PodcastEpisode","name":"How to trade using Forex Factory","url":"https://open.spotify.com/episode/41jG06LFTWimHXVDnbbsFV","datePublished":"2023-07-17","timeRequired":"PT10M3S","description":"How to use everyday economic news and the Forex Factory calendar to plan the timing of trade entries.","partOfSeries":{"@type":"PodcastSeries","name":"Learn to Trade with Sam Onigbanjo"},"author":{"@type":"Person","name":"Sam Onigbanjo"}}</script>
 </div>
 </div>
 </section>
@@ -572,13 +578,14 @@ Forex trading courses in London, across the UK and online worldwide. Live forex 
 </div>
 <div class="fcol">
 <b>Explore</b>
-<a href="#framework">The EIT Framework</a>
+<a href="/eit-framework/">The EIT Framework</a>
 <a href="#system">The System</a>
-<a href="#programs">Programs</a>
+<a href="#programs">Programmes</a>
 <a href="#podcast">Podcast</a>
 </div>
 <div class="fcol">
 <b>Academy</b>
+<a href="https://www.aulteuslogic.com" target="_blank" rel="noopener">Aulteus Logic&trade;</a>
 <a href="about-us/">About Us</a>
 <a href="blog/">Blog</a>
 <a href="contact/">Contact</a>
