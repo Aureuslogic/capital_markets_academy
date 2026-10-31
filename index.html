@@ -35,6 +35,7 @@
 "name": "Forex Trading Courses",
 "itemListElement": [
 {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Market Recruit", "description": "Beginner forex trading course covering price action, market structure and a rules-based trading plan.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "397", "priceCurrency": "GBP"},
+{"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Trading Desk", "description": "Monthly forex education membership: one 90-minute live session a month, the Trading Library, an AI trading assistant, and training in news and fundamentals, technical analysis and emotional discipline.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "97", "priceCurrency": "GBP", "priceSpecification": {"@type": "UnitPriceSpecification", "price": "97", "priceCurrency": "GBP", "billingDuration": "P1M"}},
 {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Inner Circle Live Mentorship", "description": "Live daily forex mentorship with signals, portfolio reviews and full EIT framework training.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}}
 ]
 }
@@ -49,6 +50,7 @@
 {"@type": "Question", "name": "How do I stop revenge trading and overtrading?", "acceptedAnswer": {"@type": "Answer", "text": "Revenge trading and overtrading are emotional habits, not analytical ones, so they require a behavioural system rather than another indicator. Capital Markets Academy teaches the Aulteus Logic EIT (Emotionally Intelligent Trader) framework: six protocols including a pre-trade Traffic Light check and structured accountability groups that govern when you may trade and when you must stop."}},
 {"@type": "Question", "name": "What is the EIT (Emotionally Intelligent Trader) framework?", "acceptedAnswer": {"@type": "Answer", "text": "EIT is Capital Markets Academy's proprietary trading discipline framework, built on six protocols that combine market intelligence, emotional intelligence and execution discipline. The first protocol, the Traffic Light System, is public; the remaining five are taught inside the Academy."}},
 {"@type": "Question", "name": "Is forex trading education safe and regulated?", "acceptedAnswer": {"@type": "Answer", "text": "Education itself is not regulated, but the platforms you trade on are. Capital Markets Academy trains students exclusively on UK-based, FCA-regulated trading platforms and teaches strict risk management. Trading carries significant risk and most retail CFD accounts lose money."}},
+{"@type": "Question", "name": "What is included in The Trading Desk membership?", "acceptedAnswer": {"@type": "Answer", "text": "The Trading Desk is £97 per month. It includes one 90-minute live session each month, full access to the Trading Library, an AI assistant to support your analysis and trade reviews, and training in news and fundamentals, technical analysis and emotional discipline using the EIT framework."}},
 {"@type": "Question", "name": "Can a complete beginner learn to trade forex, gold, oil and the Nasdaq?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Capital Markets Academy's beginner course, The Market Recruit, assumes no finance background and covers price action, market structure, supply and demand, and a written rules-based trading plan, before students progress to live mentorship."}}
 ]
 }
@@ -186,6 +188,13 @@ a.press-name:hover{color:var(--gold);opacity:1}
 .plan li:first-child{border-top:none}
 .plan li::before{content:"";position:absolute;left:2px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
 .plan .btn{text-align:center}
+.plans{grid-template-columns:repeat(4,1fr);gap:18px}
+.plan{padding:32px 24px}
+@media(min-width:1201px){.plan .price{font-size:28px}}
+@media(max-width:1200px){.plans{grid-template-columns:repeat(2,1fr);row-gap:30px}}
+@media(max-width:700px){.plans{grid-template-columns:1fr}}
+.plan .term{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.plans-note{font-size:12px;color:var(--muted);text-align:center;margin-top:28px;line-height:1.6}
 
 /* PODCAST */
 .podcast{background:var(--panel2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -269,7 +278,7 @@ Capital Markets Academy
 <a href="#faq">FAQ</a>
 <a href="about-us/">About</a>
 </div>
-<a class="btn btn-gold" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta" style="padding:11px 22px">Join Now</a>
+<a class="btn btn-gold" href="#programs" style="padding:11px 22px">Join Now</a>
 </div>
 </nav>
 
@@ -280,7 +289,7 @@ Capital Markets Academy
 <h1>The market doesn't beat most traders. <em>Their emotions do.</em></h1>
 <p class="lead">Learn to trade forex, gold, oil and the Nasdaq with live daily coaching. We have trained over 5,000 traders in the UK to trade technically, with the news and geopolitics, and to master their emotions through accountability groups, all using our proprietary Aulteus Logic&trade; EIT&trade; framework.</p>
 <div class="hero-ctas">
-<a class="btn btn-gold" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Start Your EIT Journey</a>
+<a class="btn btn-gold" href="#programs">Start Your EIT Journey</a>
 <a class="btn btn-ghost" href="#framework">See the Framework</a>
 </div>
 <p class="hero-note">5,000+ traders trained in the UK &middot; Live daily coaching &middot; FCA-regulated platforms only</p>
@@ -430,6 +439,19 @@ What each state means, and what it requires of you, is taught inside the Academy
 </ul>
 <a class="btn btn-ghost" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Get the Strategy</a>
 </div>
+<div class="plan">
+<h3>The Trading Desk</h3>
+<div class="who">Structured monthly support for busy professionals.</div>
+<div class="price">&pound;97 <span>per month</span></div>
+<ul>
+<li>One 90-minute live session every month</li>
+<li>Full access to the Trading Library</li>
+<li>AI assistant to support your analysis and trade reviews</li>
+<li>News &amp; fundamentals and technical analysis training</li>
+<li>Emotional discipline training built on the EIT&trade; framework</li>
+</ul>
+<a class="btn btn-ghost" href="REPLACE_WITH_STRIPE_97_LINK">Start Monthly</a>
+</div>
 <div class="plan featured">
 <span class="flag">The EIT Path</span>
 <h3>The Inner Circle</h3>
@@ -444,8 +466,8 @@ What each state means, and what it requires of you, is taught inside the Academy
 <button type="button" class="btn btn-gold" data-open-mentorship-form>Apply for Mentorship</button>
 </div>
 <div class="plan">
-<h3>Monthly Rolling &amp; 1-on-1</h3>
-<div class="who">Learn at your own pace, or one-to-one with an expert.</div>
+<h3>Private 1-on-1 Coaching</h3>
+<div class="who">One-to-one time with an expert, on your schedule.</div>
 <div class="price">Flexible</div>
 <ul>
 <li>Weekly live classes &amp; community support</li>
@@ -453,9 +475,10 @@ What each state means, and what it requires of you, is taught inside the Academy
 <li>Private lessons on your schedule</li>
 <li>EIT&trade; principles woven through every session</li>
 </ul>
-<a class="btn btn-ghost" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Join Us</a>
+<a class="btn btn-ghost" href="contact/">Enquire</a>
 </div>
 </div>
+<p class="plans-note">Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.</p>
 </div>
 </section>
 
@@ -515,6 +538,10 @@ What each state means, and what it requires of you, is taught inside the Academy
 <p>Education itself is not regulated, but the platforms you trade on are. We train students exclusively on UK-based, FCA-regulated trading platforms and teach strict risk management from day one. Trading carries significant risk and the majority of retail CFD accounts lose money, which is exactly why disciplined education matters.</p>
 </details>
 <details>
+<summary>What is included in The Trading Desk membership?</summary>
+<p>The Trading Desk is &pound;97 per month. You get one 90-minute live session each month, full access to the Trading Library, an AI assistant to support your analysis and trade reviews, and training in news and fundamentals, technical analysis and emotional discipline using the EIT&trade; framework. It suits professionals who want steady structure without daily commitments.</p>
+</details>
+<details>
 <summary>Can a complete beginner learn to trade forex, gold, oil and the Nasdaq?</summary>
 <p>Yes. Our beginner course, The Market Recruit, assumes no finance background. You will learn price action, market structure, supply and demand, and leave with a written, rules-based trading plan before progressing to live mentorship.</p>
 </details>
@@ -526,7 +553,7 @@ What each state means, and what it requires of you, is taught inside the Academy
 <span class="kicker">Your move</span>
 <h2>The framework is here.<br>The training is inside.</h2>
 <p class="sub">Join over 5,000 UK traders learning to master the market and themselves with the Aulteus Logic&trade; EIT&trade; framework, as featured in Business Insider, The Daily Mail, Express and more.</p>
-<a class="btn btn-gold" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta" style="font-size:16px;padding:16px 36px">Join Capital Markets Academy</a>
+<a class="btn btn-gold" href="#programs" style="font-size:16px;padding:16px 36px">Choose Your Programme</a>
 <p class="hero-note" style="margin-top:16px">Free introductory lesson and free trading book available on request.</p>
 </section>
 
@@ -549,10 +576,11 @@ Forex trading courses in London, across the UK and online worldwide. Live forex 
 <a href="about-us/">About Us</a>
 <a href="blog/">Blog</a>
 <a href="contact/">Contact</a>
-<a href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Join Now</a>
+<a href="#programs">Join Now</a>
 </div>
 </div>
 <div class="disclaimer">
+Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.<br><br>
 Spread bets and CFDs are complex instruments and come with a high risk of losing money rapidly due to leverage. 61% of retail investor accounts lose money when trading spread bets and CFDs with this provider. You should consider whether you understand how spread bets and CFDs work and whether you can afford to take the high risk of losing your money.<br><br>
 &copy; 2026 Capital Markets Academy &middot; Aulteus Logic&trade; and EIT&trade; (Emotionally Intelligent Trader) are trademarks of their respective owner.
 </div>
