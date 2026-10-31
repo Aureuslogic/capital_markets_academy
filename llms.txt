@@ -17,3 +17,8 @@
 ## Key terms
 - EIT (Emotionally Intelligent Trader) framework: a six-protocol trading discipline system combining market intelligence, emotional intelligence and execution discipline.
 - Traffic Light System: the first EIT protocol, a pre-trade check of the trader's emotional state (green, amber, red) before capital is at risk.
+
+## Articles
+- [The Traffic Light Check: the pre-trade question most traders never ask](https://capitalmarketsacademy.com/blog/traffic-light-check/): The EIT Traffic Light Check is a pre-trade test of your emotional state, not the market. Why it matters, when to run it, and what it protects.
+- [Why the market does not beat most traders](https://capitalmarketsacademy.com/blog/why-the-market-does-not-beat-most-traders/): Most retail traders do not fail for lack of indicators. They fail from revenge trading, oversized risk and emotional decisions. How live coaching and accountability change that.
+- [Why we train only on FCA-regulated platforms](https://capitalmarketsacademy.com/blog/fca-regulated-platforms/): Trading education is not regulated, but the platforms you trade on are. Why Capital Markets Academy trains only on FCA-regulated platforms, and how to check a firm yourself.
