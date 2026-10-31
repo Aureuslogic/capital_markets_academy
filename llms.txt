@@ -3,6 +3,7 @@
 > UK forex and capital markets education academy, online and in London. Live coaching in technical analysis, news and fundamentals, and trading psychology, built on the Aulteus Logic EIT (Emotionally Intelligent Trader) framework created by founder Sam Onigbanjo. Educational content only; not financial advice.
 
 ## Key pages
+- [What is the EIT framework?](https://capitalmarketsacademy.com/eit-framework/): definition of the Aulteus Logic EIT framework and the Traffic Light System
 - [Home and programmes](https://capitalmarketsacademy.com/): the EIT framework, programmes, pricing and FAQ
 - [About Sam Onigbanjo](https://capitalmarketsacademy.com/about-us/): founder and creator of the EIT framework
 - [Blog](https://capitalmarketsacademy.com/blog/): forex education and trading psychology
