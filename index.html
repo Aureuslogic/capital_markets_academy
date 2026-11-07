@@ -39,7 +39,7 @@
 "@type": "OfferCatalog",
 "name": "Forex Trading Courses",
 "itemListElement": [
-{"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Market Recruit", "description": "Beginner forex trading course covering price action, market structure and a rules-based trading plan.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "397", "priceCurrency": "GBP", "priceSpecification": {"@type": "UnitPriceSpecification", "price": "397", "priceCurrency": "GBP", "billingDuration": "P1M"}},
+{"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Market Recruit", "description": "Intensive monthly forex training covering price action, market structure and a rules-based trading plan.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "397", "priceCurrency": "GBP", "priceSpecification": {"@type": "UnitPriceSpecification", "price": "397", "priceCurrency": "GBP", "billingDuration": "P1M"}},
 {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Trading Desk", "description": "Monthly forex education membership: one 90-minute live session a month, the Trading Library, an AI trading assistant, and training in news and fundamentals, technical analysis and emotional discipline.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "price": "97", "priceCurrency": "GBP", "priceSpecification": {"@type": "UnitPriceSpecification", "price": "97", "priceCurrency": "GBP", "billingDuration": "P1M"}},
 {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "The Inner Circle Live Mentorship", "description": "Live daily forex mentorship with portfolio reviews and full EIT framework training. Entry by application.", "provider": {"@type": "EducationalOrganization", "name": "Capital Markets Academy"}}, "availability": "https://schema.org/LimitedAvailability", "eligibleCustomerType": "By application"}
 ]
@@ -56,7 +56,7 @@
 {"@type": "Question", "name": "What is the EIT (Emotionally Intelligent Trader) framework?", "acceptedAnswer": {"@type": "Answer", "text": "EIT is Capital Markets Academy's proprietary trading discipline framework, built on six protocols that combine market intelligence, emotional intelligence and execution discipline. The first protocol, the Traffic Light System, is public; the remaining five are taught inside the Academy."}},
 {"@type": "Question", "name": "Is forex trading education safe and regulated?", "acceptedAnswer": {"@type": "Answer", "text": "Education itself is not regulated, but the platforms you trade on are. Capital Markets Academy trains students exclusively on UK-based, FCA-regulated trading platforms and teaches strict risk management. Trading carries significant risk and most retail CFD accounts lose money."}},
 {"@type": "Question", "name": "What is included in The Trading Desk membership?", "acceptedAnswer": {"@type": "Answer", "text": "The Trading Desk is £97 per month. It includes one 90-minute live session each month, full access to the Trading Library, an AI assistant to support your analysis and trade reviews, and training in news and fundamentals, technical analysis and emotional discipline using the EIT framework."}},
-{"@type": "Question", "name": "Can a complete beginner learn to trade forex, gold, oil and the Nasdaq?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Capital Markets Academy's beginner course, The Market Recruit, assumes no finance background and covers price action, market structure, supply and demand, and a written rules-based trading plan, before students progress to live mentorship."}}
+{"@type": "Question", "name": "Can a complete beginner learn to trade forex, gold, oil and the Nasdaq?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Beginners usually start with The Trading Desk at £97 per month: a monthly 90-minute live session, the Trading Library, AI support and EIT discipline training, with no finance background needed. Those who want deeper, faster training can take The Market Recruit, covering price action, market structure, supply and demand and a written rules-based trading plan, before progressing to live mentorship."}}
 ]
 }
 </script>
@@ -132,6 +132,9 @@ radial-gradient(500px 350px at 10% 90%, rgba(62,207,142,.06), transparent 60%);p
 .hero p.lead{margin:22px 0 34px;font-size:18px;color:var(--muted);max-width:540px}
 .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
 .hero-note{margin-top:18px;font-size:13px;color:var(--muted)}
+.free-dl{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:8px 14px 8px 8px;border:1px solid rgba(47,210,140,.45);border-radius:999px;color:var(--text);font-size:14px;font-weight:500;background:rgba(47,210,140,.07)}
+.free-dl:hover{border-color:var(--gold);color:var(--gold)}
+.free-dl b{background:var(--gold);color:#06130c;font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 9px;border-radius:999px}
 
 /* traffic light card */
 .tl-card{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:20px;padding:34px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
@@ -313,6 +316,7 @@ Capital Markets Academy
 <a class="btn btn-gold" href="#programs">Start Your EIT Journey</a>
 <a class="btn btn-ghost" href="#framework">See the Framework</a>
 </div>
+<a class="free-dl" href="https://coaching.aiacademyforbeginners.com/before-you-take-the-trade-free-playbook"><b>FREE DOWNLOAD</b> Before You Take the Trade: the playbook &rarr;</a>
 <p class="hero-note">5,000+ traders trained in the UK &middot; Live daily coaching &middot; FCA-regulated platforms only</p>
 </div>
 <aside class="tl-card">
@@ -448,21 +452,10 @@ What each state means, and what it requires of you, is taught inside the Academy
 <h2>Choose how you learn to trade.</h2>
 <p class="sub">Every programme is built on the EIT&trade; framework, live coaching from traders who trade daily, and a community that holds you accountable.</p>
 <div class="plans">
-<div class="plan">
-<h3>The Market Recruit</h3>
-<div class="who">For total beginners. No finance degree required.</div>
-<div class="price">&pound;397 <span>per month</span></div>
-<ul>
-<li>Price action &amp; market structure</li>
-<li>Trend-Catcher entry &amp; exit indicators</li>
-<li>Supply &amp; demand zones</li>
-<li>Your first EIT-governed trading plan</li>
-</ul>
-<a class="btn btn-ghost" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Get the Strategy</a>
-</div>
-<div class="plan">
+<div class="plan" style="position:relative">
+<span class="flag">Start Here</span>
 <h3>The Trading Desk</h3>
-<div class="who">Structured monthly support for busy professionals.</div>
+<div class="who">For beginners and busy professionals. The simplest way to start.</div>
 <div class="price">&pound;97 <span>per month</span></div>
 <ul>
 <li>One 90-minute live session every month</li>
@@ -472,6 +465,18 @@ What each state means, and what it requires of you, is taught inside the Academy
 <li>Emotional discipline training built on the EIT&trade; framework</li>
 </ul>
 <a class="btn btn-ghost" href="https://buy.stripe.com/bJedR87fI53457u2WN7ok1B">Start Monthly</a>
+</div>
+<div class="plan">
+<h3>The Market Recruit</h3>
+<div class="who">For committed beginners who want deeper, faster training.</div>
+<div class="price">&pound;397 <span>per month</span></div>
+<ul>
+<li>Price action &amp; market structure</li>
+<li>Trend-Catcher entry &amp; exit indicators</li>
+<li>Supply &amp; demand zones</li>
+<li>Your first EIT-governed trading plan</li>
+</ul>
+<a class="btn btn-ghost" href="https://buy.stripe.com/8wM8y0fLheWqfni7ta">Get the Strategy</a>
 </div>
 <div class="plan featured">
 <span class="flag">The EIT Path</span>
@@ -569,7 +574,7 @@ From <i>Learn to Trade with Sam Onigbanjo</i> (10 minutes). Sam explains how to 
 </details>
 <details>
 <summary>Can a complete beginner learn to trade forex, gold, oil and the Nasdaq?</summary>
-<p>Yes. Our beginner course, The Market Recruit, assumes no finance background. You will learn price action, market structure, supply and demand, and leave with a written, rules-based trading plan before progressing to live mentorship.</p>
+<p>Yes. Most beginners start with The Trading Desk at &pound;97 per month: a monthly 90-minute live session, the Trading Library, AI support and EIT&trade; discipline training, with no finance background needed. If you want deeper, faster training, The Market Recruit covers price action, market structure, supply and demand, and leaves you with a written, rules-based trading plan before progressing to live mentorship.</p>
 </details>
 </div>
 </div>
