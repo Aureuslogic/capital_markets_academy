@@ -23,3 +23,9 @@
 - [The Traffic Light Check: the pre-trade question most traders never ask](https://capitalmarketsacademy.com/blog/traffic-light-check/): The EIT Traffic Light Check is a pre-trade test of your emotional state, not the market. Why it matters, when to run it, and what it protects.
 - [Why the market does not beat most traders](https://capitalmarketsacademy.com/blog/why-the-market-does-not-beat-most-traders/): Most retail traders do not fail for lack of indicators. They fail from revenge trading, oversized risk and emotional decisions. How live coaching and accountability change that.
 - [Why we train only on FCA-regulated platforms](https://capitalmarketsacademy.com/blog/fca-regulated-platforms/): Trading education is not regulated, but the platforms you trade on are. Why Capital Markets Academy trains only on FCA-regulated platforms, and how to check a firm yourself.
+
+## Free resources
+- [The Capital Markets Academy Game](https://game.capitalmarketsacademy.com/): a free five-level trading decisions simulator. 25 scenarios, four routes through each; passing a level needs 70 points, Discipline of 80 or more, and no catastrophic route. Educational simulation only, not financial advice.
+
+## Policies
+- [Privacy Policy](https://capitalmarketsacademy.com/privacy-policy/): how Capital Markets Academy collects, uses and protects personal data under UK data protection law.
