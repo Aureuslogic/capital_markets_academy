@@ -107,6 +107,9 @@ nav{position:sticky;top:0;z-index:50;background:rgba(11,15,20,.85);backdrop-filt
 .badge-eit{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:var(--gold-soft);color:var(--gold);border:1px solid rgba(47,210,140,.35);padding:3px 9px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600}
 .nav-links{display:flex;gap:18px;white-space:nowrap;font-size:14px;color:var(--muted)}
 .nav-links a:hover{color:var(--text)}
+.logo,.nav-in .btn{white-space:nowrap;flex-shrink:0}
+@media(max-width:1180px){.nav-links{gap:14px;font-size:13.5px}}
+@media(max-width:1040px){.nav-links{display:none}}
 .nav-links a.active{color:var(--gold)}
 @media(max-width:860px){.nav-links{display:none}}
 
