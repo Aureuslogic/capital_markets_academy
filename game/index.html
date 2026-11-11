@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Capital Markets Academy Game | Trading Decisions Under Pressure</title>
+<link rel="canonical" href="https://game.capitalmarketsacademy.com/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="The Capital Markets Academy Game: a free five level trading decisions simulator. Train the institutional edge: knowing when to act, when to wait, and why.">
+<meta property="og:title" content="The Capital Markets Academy Game">
+<meta property="og:url" content="https://game.capitalmarketsacademy.com/">
+<meta property="og:description" content="Five levels. Twenty five live trading decisions. Four routes through each: right, partially right, wrong, catastrophic. Can you pass the War Room?">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<style>
+  :root{
+    --navy:#0b0f14; --panel:#111820; --panel2:#0e141b; --line:rgba(255,255,255,.08);
+    --gold:#2fd28c; --goldL:#7ee6b8; --text:#e8e6e1; --dim:#9aa4ae;
+    --green:#3ecf8e; --amber:#f0b429; --red:#e5484d; --redD:#8b1e1e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--navy);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;background:
+    radial-gradient(900px 500px at 80% -10%, rgba(47,210,140,.07), transparent 60%),
+    radial-gradient(700px 400px at 10% 110%, rgba(240,180,41,.04), transparent 60%);pointer-events:none}
+  .serif{font-family:Fraunces,Georgia,serif}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 20px 140px;position:relative}
+  header.app{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo .mark{width:42px;height:42px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Fraunces,Georgia,serif;color:var(--gold);font-size:20px;letter-spacing:1px}
+  .logo .name{font-family:Fraunces,Georgia,serif;font-size:19px;letter-spacing:.3px;color:var(--text)}
+  .logo .name small{display:block;font-size:10px;letter-spacing:3.5px;color:var(--gold);font-family:Inter,sans-serif;text-transform:uppercase}
+  .tm{font-size:9px;vertical-align:super;color:var(--gold)}
+  .hud{display:flex;gap:18px;align-items:center;font-size:13px;color:var(--dim)}
+  .hud b{color:var(--goldL);font-size:15px;font-variant-numeric:tabular-nums}
+  .screen{display:none;animation:fade .45s ease}
+  .screen.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* Landing */
+  .hero{text-align:center;padding:64px 10px 36px}
+  .kicker{display:inline-block;border:1px solid var(--gold);color:var(--gold);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;border-radius:30px;margin-bottom:26px}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:clamp(30px,5.4vw,52px);line-height:1.15;letter-spacing:.5px}
+  h1 .g{color:var(--gold)}
+  .hero p.sub{max-width:640px;margin:22px auto 0;color:var(--dim);font-size:17px}
+  .btn{display:inline-block;background:var(--gold);color:#06130c;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;font-size:13px;border:none;border-radius:4px;padding:15px 36px;cursor:pointer;transition:.2s;text-decoration:none}
+  .btn:hover{background:var(--goldL);transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--goldL);border:1px solid var(--gold)}
+  .btn.ghost:hover{background:rgba(47,210,140,.1)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:46px 0 10px}
+  .pillar{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px}
+  .pillar h3{font-family:Fraunces,Georgia,serif;color:var(--goldL);font-size:16px;margin-bottom:8px}
+  .pillar p{font-size:13.5px;color:var(--dim)}
+
+  /* Level select */
+  .lvgrid{display:grid;gap:14px;margin-top:26px}
+  .lvcard{display:flex;gap:18px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+  .lvcard:hover:not(.locked){border-color:var(--gold);transform:translateX(4px)}
+  .lvcard.locked{opacity:.45;cursor:not-allowed}
+  .lvnum{font-family:Fraunces,Georgia,serif;font-size:34px;color:var(--gold);min-width:54px;text-align:center}
+  .lvcard h3{font-family:Fraunces,Georgia,serif;font-size:19px}
+  .lvcard .tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+  .lvcard p{font-size:13.5px;color:var(--dim);margin-top:3px}
+  .lvstate{margin-left:auto;text-align:right;font-size:12px;color:var(--dim);min-width:90px}
+  .lvstate .done{color:var(--green);font-weight:700}
+  .lock{font-size:18px}
+
+  /* Game */
+  .gametop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 8px}
+  .gametop h2{font-family:Fraunces,Georgia,serif;font-size:22px}
+  .gametop .lvl-tag{color:var(--gold);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;display:block}
+  .meters{display:flex;gap:22px;flex-wrap:wrap;margin:14px 0 4px}
+  .meter{flex:1;min-width:200px}
+  .meter label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between}
+  .meter label b{color:var(--goldL);font-variant-numeric:tabular-nums}
+  .bar{height:7px;background:#18212b;border-radius:6px;margin-top:6px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:6px;transition:width .6s ease, background .4s}
+  .bar .cap{background:linear-gradient(90deg,#1b6b49,var(--gold))}
+  .bar .dis{background:linear-gradient(90deg,#1d5f8a,#3aa0e0)}
+  .progress{font-size:12px;color:var(--dim);letter-spacing:1px;margin-top:8px}
+  .scen{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px;margin-top:14px}
+  .scen .stitle{font-family:Fraunces,Georgia,serif;color:var(--goldL);font-size:18px;margin-bottom:10px}
+  .scen .situation{color:var(--text);font-size:15.5px}
+  .scen .ask{margin-top:14px;font-weight:700;color:var(--gold);font-size:15px}
+  .routes{display:grid;gap:10px;margin-top:18px}
+  .route{display:flex;gap:14px;align-items:flex-start;text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:15px 16px;font:14.5px/1.55 inherit;cursor:pointer;transition:.18s;width:100%}
+  .route:hover{border-color:var(--gold);background:#15202b}
+  .route .key{font-family:Fraunces,Georgia,serif;color:var(--gold);font-size:16px;border:1px solid var(--gold);border-radius:50%;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+  .route:disabled{cursor:default;opacity:.55}
+  .route.revealed{opacity:1}
+  .route.v-right{border-color:var(--green);background:rgba(47,191,113,.08)}
+  .route.v-partial{border-color:var(--amber);background:rgba(224,168,58,.08)}
+  .route.v-wrong{border-color:var(--red);background:rgba(224,82,82,.08)}
+  .route.v-fatal{border-color:var(--redD);background:rgba(139,30,30,.16)}
+
+  .verdict{margin-top:16px;border-radius:10px;padding:20px 22px;border:1px solid var(--line);display:none;animation:fade .4s}
+  .verdict.on{display:block}
+  .verdict .badge{display:inline-block;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;padding:5px 14px;border-radius:30px;margin-bottom:12px}
+  .verdict.v-right{border-color:var(--green)} .verdict.v-right .badge{background:rgba(47,191,113,.15);color:var(--green)}
+  .verdict.v-partial{border-color:var(--amber)} .verdict.v-partial .badge{background:rgba(224,168,58,.15);color:var(--amber)}
+  .verdict.v-wrong{border-color:var(--red)} .verdict.v-wrong .badge{background:rgba(224,82,82,.15);color:var(--red)}
+  .verdict.v-fatal{border-color:var(--redD)} .verdict.v-fatal .badge{background:rgba(139,30,30,.35);color:#ff9d9d}
+  .verdict .why{font-size:15px}
+  .verdict .delta{margin-top:10px;font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .verdict .actions{margin-top:18px}
+
+  /* Sam panel */
+  .sam{position:fixed;left:0;right:0;bottom:0;background:rgba(9,15,28,.97);backdrop-filter:blur(8px);border-top:1px solid var(--gold);z-index:40}
+  .sam .inner{max-width:980px;margin:0 auto;display:flex;gap:14px;align-items:flex-start;padding:14px 20px}
+  .sam .avatar{min-width:46px;height:46px;border-radius:50%;border:1.5px solid var(--gold);background:radial-gradient(circle at 35% 30%, #1d3a2e, #0e141b);display:flex;align-items:center;justify-content:center;font-family:Fraunces,Georgia,serif;color:var(--goldL);font-size:15px;letter-spacing:1px}
+  .sam .who{font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+  .sam .who span{color:var(--dim);text-transform:none;letter-spacing:.4px}
+  .sam .msg{font-size:14.5px;color:var(--text);min-height:22px}
+  .sam .msg::after{content:"▍";color:var(--gold);animation:blink 1s infinite}
+  .sam .msg.donetyping::after{content:""}
+  @keyframes blink{50%{opacity:0}}
+  .sam .hintbtn{margin-left:auto;align-self:center;background:transparent;border:1px solid var(--line);color:var(--dim);font-size:12px;border-radius:20px;padding:7px 16px;cursor:pointer;white-space:nowrap}
+  .sam .hintbtn:hover{border-color:var(--gold);color:var(--goldL)}
+
+  /* Debrief / cert */
+  .debrief{background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:34px;margin-top:30px;text-align:center}
+  .debrief h2{font-family:Fraunces,Georgia,serif;font-size:26px;margin-bottom:6px}
+  .debrief .score{font-family:Fraunces,Georgia,serif;font-size:54px;color:var(--gold);margin:10px 0}
+  .debrief .passfail{font-size:13px;letter-spacing:3px;text-transform:uppercase;font-weight:700}
+  .debrief .passfail.pass{color:var(--green)} .debrief .passfail.fail{color:var(--red)}
+  .recap{display:grid;gap:8px;margin:24px auto;max-width:560px;text-align:left}
+  .recap .row{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;border-bottom:1px dashed var(--line);padding:7px 2px;color:var(--dim)}
+  .recap .row b{font-weight:600}
+  .vr{color:var(--green)} .vp{color:var(--amber)} .vw{color:var(--red)} .vf{color:#ff9d9d}
+  .bridge{margin-top:26px;border-top:1px solid var(--line);padding-top:22px;font-size:14px;color:var(--dim)}
+  .bridge a{color:var(--goldL)}
+  .cert{border:2px solid var(--gold);border-radius:4px;padding:46px 30px;margin-top:30px;text-align:center;background:
+    linear-gradient(rgba(47,210,140,.04),transparent 40%),var(--panel)}
+  .cert .crest{font-family:Fraunces,Georgia,serif;font-size:30px;color:var(--gold);letter-spacing:4px}
+  .cert h2{font-family:Fraunces,Georgia,serif;font-size:30px;margin:14px 0 4px}
+  .cert .holder{font-family:Fraunces,Georgia,serif;font-size:26px;color:var(--goldL);border-bottom:1px solid var(--gold);display:inline-block;padding:8px 30px;margin:18px 0 8px}
+  .cert p{color:var(--dim);font-size:14px;max-width:560px;margin:8px auto}
+  .cert input{background:var(--panel2);border:1px solid var(--line);color:var(--text);font:16px Fraunces,Georgia,serif;padding:10px 16px;border-radius:4px;text-align:center;margin:14px 0}
+  footer.legal{margin-top:60px;border-top:1px solid var(--line);padding-top:18px;font-size:11.5px;color:#6b7384;line-height:1.7}
+  /* Capture form */
+  .capture{background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:34px;margin-top:30px;max-width:640px;margin-left:auto;margin-right:auto}
+  .capture h2{font-family:Fraunces,Georgia,serif;font-size:25px;margin:10px 0 6px}
+  .capture p.lead{color:var(--dim);font-size:14.5px}
+  .field{margin-top:18px}
+  .field label{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+  .field input[type=text],.field input[type=email],.field select,.field textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);font:15px inherit;padding:12px 14px;border-radius:6px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+  .radios{display:flex;gap:12px;flex-wrap:wrap}
+  .radios label{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:11px 18px;cursor:pointer;font-size:14px;color:var(--text);text-transform:none;letter-spacing:0}
+  .radios label:has(input:checked){border-color:var(--gold);background:rgba(47,210,140,.1)}
+  .ferr{color:var(--red);font-size:13px;margin-top:12px;display:none}
+  .fnote{font-size:11.5px;color:#6b7384;margin-top:14px;line-height:1.6}
+  .centered{text-align:center;margin-top:26px}
+  .route.is-answer{opacity:1;box-shadow:0 0 0 1px var(--green) inset}
+  .rightbox{display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+  .rightbox .rlabel{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:var(--green);margin-bottom:6px}
+  .rightbox .rtext{font-weight:600;margin-bottom:6px}
+  .rightbox .rwhy{font-size:14px;color:var(--dim)}
+  .recap .row.fix{border-bottom:none;padding-top:0;font-size:12.5px;color:var(--green)}
+  .logo .dots{display:flex;gap:5px}
+  .logo .dots i{width:9px;height:9px;border-radius:50%;display:block}
+  .badge-eit{font-size:10px;letter-spacing:1.5px;border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:2px 8px;margin-left:8px;vertical-align:middle;font-family:Inter,sans-serif}
+  .note{font-size:12px;color:var(--dim);margin-top:6px}
+  @media (max-width:640px){
+    .hud{display:none} .scen{padding:18px}
+    .wrap{padding-bottom:190px}
+    .gametop .btn.ghost{padding:8px 14px !important;font-size:11px}
+    .sam .inner{flex-wrap:wrap;gap:6px 10px;padding:10px 14px}
+    .sam .avatar{min-width:30px;width:30px;height:30px;font-size:11px}
+    .sam .who{font-size:10px;letter-spacing:1.5px}
+    .sam .who span{display:none}
+    .sam .msg{font-size:13.5px;line-height:1.45;max-height:4.4em;overflow-y:auto}
+    .sam .hintbtn{margin-left:40px;font-size:11.5px;padding:6px 12px}
+    body.in-play vapi-widget{display:none !important}
+  }
+  /* Voice Agent widget, bottom-right */
+  vapi-widget{--vapi-widget-z-index:50}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app">
+    <div class="logo">
+      <div class="dots"><i style="background:var(--green)"></i><i style="background:var(--amber)"></i><i style="background:var(--red)"></i></div>
+      <div class="name"><a href="https://capitalmarketsacademy.com" style="color:inherit;text-decoration:none">Capital Markets Academy</a><span class="badge-eit">EIT™</span><small>The Game</small></div>
+    </div>
+    <div class="hud" id="hud" style="visibility:hidden">
+      <div>Decision Capital <b id="hudCap">£100,000</b></div>
+      <div>Discipline <b id="hudDis">100</b></div>
+    </div>
+  </header>
+
+  <!-- LANDING -->
+  <section class="screen on" id="scr-landing">
+    <div class="hero">
+      <span class="kicker">The Capital Markets Academy Game</span>
+      <h1>The Market Does Not Reward Effort.<br><span class="g">It Rewards Governed Decisions.</span></h1>
+      <p class="sub">Five levels. Twenty five live decision scenarios. Four routes through every one of them: right, partially right, wrong, and catastrophically wrong. Your guide is Sam Onigbanjo, founder of Capital Markets Academy and inventor of the Aulteus Logic™ EIT™ framework. Your job is not to predict the market. Your job is to govern your own judgement.</p>
+      <div class="centered">
+        <button class="btn" onclick="goLevels()">Enter The War Room</button>
+        <button class="btn ghost" onclick="shareGame()" style="margin-left:10px">Share This Challenge</button>
+      </div>
+      <div class="pillars">
+        <div class="pillar"><h3>Novice to Institutional</h3><p>Begin knowing nothing. Finish thinking like the desk on the other side of your trade.</p></div>
+        <div class="pillar"><h3>No Action Is a Position</h3><p>Some scenarios are won by refusing to act. That is the lesson most traders pay six figures to learn.</p></div>
+        <div class="pillar"><h3>Two Scores, One Truth</h3><p>Points measure outcomes. Discipline measures process. To pass a level you need both: 70 points and Discipline of 80 or more.</p></div>
+        <div class="pillar"><h3>One Route Ends It</h3><p>Choose a catastrophic route and the level ends on the spot, as it would in a live account. After every choice you see the governed route and why.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEVEL SELECT -->
+  <section class="screen" id="scr-levels">
+    <div style="margin-top:30px">
+      <span class="kicker">Choose Your Level</span>
+      <h1 style="font-size:clamp(24px,4vw,36px);margin-top:14px">Five Levels of Decision Governance</h1>
+      <p style="color:var(--dim);margin-top:8px;max-width:640px">Each level holds five scenarios. To unlock the next level you need 70 points, Discipline of 80 or more, and no catastrophic route. Discipline lost in a level is not regained in that level. A catastrophic route ends the level at once. Exactly like the real thing, except here the tuition is free.</p>
+      <div class="lvgrid" id="lvgrid"></div>
+      <div class="centered"><button class="btn ghost" onclick="resetAll()">Reset All Progress</button></div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section class="screen" id="scr-game">
+    <div class="gametop">
+      <div><span class="lvl-tag" id="gLvlTag"></span><h2 id="gLvlName"></h2></div>
+      <button class="btn ghost" style="padding:10px 20px" onclick="goLevels()">Exit Level</button>
+    </div>
+    <div class="meters">
+      <div class="meter"><label>Decision Capital <b id="mCapTxt">£100,000</b></label><div class="bar"><i class="cap" id="mCap" style="width:100%"></i></div></div>
+      <div class="meter"><label>Discipline <b id="mDisTxt">100</b></label><div class="bar"><i class="dis" id="mDis" style="width:100%"></i></div></div>
+    </div>
+    <div class="note">Decision Capital is a game score, not the money in each story. Pass mark: 70 points and Discipline 80+.</div>
+    <div class="progress" id="gProg"></div>
+    <div class="scen">
+      <div class="stitle" id="sTitle"></div>
+      <div class="situation" id="sSituation"></div>
+      <div class="ask" id="sAsk"></div>
+      <div class="routes" id="sRoutes"></div>
+    </div>
+    <div class="verdict" id="verdict">
+      <span class="badge" id="vBadge"></span>
+      <div class="why" id="vWhy"></div>
+      <div class="delta" id="vDelta"></div>
+      <div class="rightbox" id="vRight"></div>
+      <div class="actions"><button class="btn" id="vNext" onclick="nextScenario()">Continue</button></div>
+    </div>
+  </section>
+
+  <!-- DEBRIEF -->
+  <section class="screen" id="scr-debrief">
+    <div class="debrief">
+      <span class="kicker" id="dTag"></span>
+      <h2 id="dTitle"></h2>
+      <div class="score" id="dScore"></div>
+      <div class="passfail" id="dPass"></div>
+      <div class="recap" id="dRecap"></div>
+      <div id="dBtns"></div>
+      <div class="bridge" id="dBridge"></div>
+    </div>
+  </section>
+
+  <!-- LEAD CAPTURE (after Level I) -->
+  <section class="screen" id="scr-capture">
+    <div class="capture">
+      <span class="kicker">Level I Passed · One Step Before Level II</span>
+      <h2>Join the Capital Markets Academy Inner Circle</h2>
+      <p class="lead">Level I is open to everyone. Levels II to V are for people serious enough to tell us who they are. Thirty seconds, then Foundations unlocks.</p>
+      <form id="capForm" onsubmit="return submitCapture(event)">
+        <div class="field"><label for="capName">Your Name</label><input type="text" id="capName" maxlength="60" autocomplete="name" placeholder="e.g. Alex Mensah"></div>
+        <div class="field"><label for="capEmail">Your Email</label><input type="email" id="capEmail" maxlength="80" autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field"><label for="capNeed">Your Biggest Trading Need Right Now</label>
+          <select id="capNeed">
+            <option value="">Select one</option>
+            <option>I'm brand new and need a proper foundation</option>
+            <option>I keep losing money and don't know why</option>
+            <option>Risk management and discipline</option>
+            <option>Reading market structure like the institutions</option>
+            <option>Consistency and trading psychology</option>
+            <option>Scaling an already profitable approach</option>
+            <option>Other</option>
+          </select></div>
+        <div class="field"><label for="capMore">Anything Else? (optional)</label><textarea id="capMore" rows="2" maxlength="300" placeholder="One sentence about where you're stuck"></textarea></div>
+        <div class="field"><label>Would you like us to contact you about Academy programmes and free sessions?</label>
+          <div class="radios">
+            <label><input type="radio" name="capContact" value="Yes"> Yes, contact me</label>
+            <label><input type="radio" name="capContact" value="No"> No, just let me play</label>
+          </div></div>
+        <div class="ferr" id="capErr">Please complete your name, a valid email, your biggest need, and the contact question.</div>
+        <div class="field"><button class="btn" type="submit" id="capBtn">Unlock Level II · Foundations</button></div>
+        <p class="fnote">We use your details to respond to your trading need and, only if you said yes, to contact you about Capital Markets Academy. No spam, no sharing with third parties, unsubscribe anytime. Questions about your data: <a href="mailto:sam@capitalmarketsacademy.com" style="color:var(--goldL)">sam@capitalmarketsacademy.com</a>.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE -->
+  <section class="screen" id="scr-cert">
+    <div class="cert">
+      <div class="crest">C · M · A</div>
+      <h2>The Capital Markets Academy Game · Completed</h2>
+      <p>This certifies that</p>
+      <div id="certNameWrap"><input id="certName" placeholder="Enter your name" maxlength="40"><br><button class="btn ghost" style="padding:10px 22px" onclick="sealCert()">Seal Certificate</button></div>
+      <div class="holder" id="certHolder" style="display:none"></div>
+      <p>has completed all five levels of <b>The Capital Markets Academy Game</b> without a single catastrophic route, demonstrating governed decision making: risk framed before opportunity, restraint applied at the correct moment, and the understanding that no action is a position. This is a record of an educational game, not a professional qualification.</p>
+      <p id="certStats" style="color:var(--goldL)"></p>
+      <p class="serif" style="color:var(--gold);font-style:italic;margin-top:18px">"Systems beat luck every time." Sam Onigbanjo, Founder, Capital Markets Academy</p>
+      <div class="centered">
+        <a class="btn" href="https://capitalmarketsacademy.com/#programs" target="_blank" rel="noopener">Explore the Programmes</a>
+        <button class="btn ghost" onclick="shareGame()" style="margin-left:10px">Challenge a Friend</button>
+        <button class="btn ghost" onclick="resetAll();goLevels()" style="margin-left:10px">Play Again</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="legal">
+    <b>Important.</b> The Capital Markets Academy Game is an educational simulation. All capital figures, scenarios, scores and outcomes are illustrative and fictional. Nothing here is investment advice, a personal recommendation, or an invitation to trade. Capital Markets Academy provides education and is not a trading platform, broker, or regulated advisory service. Trading foreign exchange, commodities and indices carries a high level of risk and most retail participants lose money. If you choose to trade, you alone are responsible for your decisions.<br><br>Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.<br><br>© 2026 Capital Markets Academy · Aulteus Logic™ and EIT™ are trademarks of Sam Onigbanjo.
+  </footer>
+</div>
+
+<!-- SAM ONIGBANJO AGENTIC GUIDE -->
+<div class="sam" id="samPanel">
+  <div class="inner">
+    <div class="avatar">SO</div>
+    <div style="flex:1">
+      <div class="who">Sam Onigbanjo <span>· Your Guide · Founder, Capital Markets Academy</span></div>
+      <div class="msg donetyping" id="samMsg"></div>
+    </div>
+    <button class="hintbtn" id="hintBtn" onclick="giveHint()" style="display:none">Ask Sam for guidance (−2 pts, −5 Discipline)</button>
+  </div>
+</div>
+
+<!-- Voice Agent: Talk to the Academy -->
+<script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js" async type="text/javascript"></script>
+<vapi-widget
+  public-key="8fcabbf5-1ce9-4222-a7fa-e9be24d0f90a"
+  assistant-id="fb26a312-0d2a-4683-9db8-38e4b00c61da"
+  mode="voice"
+  theme="dark"
+  position="bottom-right"
+  size="compact"
+  border-radius="large"
+  base-bg-color="#111820"
+  accent-color="#2fd28c"
+  cta-button-color="#2fd28c"
+  cta-button-text-color="#06130c"
+  title="Talk to the Academy"
+  cta-title="Talk to the Academy"
+  cta-subtitle="Ask about the game, programmes and free sessions"
+  start-button-text="Start call"
+  end-button-text="End call"
+  voice-show-transcript="true"
+  consent-required="true"
+  consent-title="Before we talk"
+  consent-content="This voice call is recorded and transcribed so the Academy can follow up with you. Our assistant gives educational information only, not financial advice. Trading carries risk of loss."
+  consent-storage-key="cma_voice_consent"
+></vapi-widget>
+
+<script>
+/* ============================================================
+   THE CAPITAL MARKETS ACADEMY GAME (decision governance)
+   Verdicts: right | partial | wrong | fatal
+   ============================================================ */
+/* Points measure outcomes. Discipline measures process and is never regained within a level.
+   To pass: 70+ points AND Discipline 80+ AND no catastrophic route. A catastrophic route ends the level at once. */
+const FX = {
+  right:  { pts: 20, cap: +8000,  dis: 0,   badge: "Right Route" },
+  partial:{ pts: 10, cap: +1000,  dis: -5,  badge: "Partially Right" },
+  wrong:  { pts: 0,  cap: -15000, dis: -15, badge: "Wrong Route · Danger" },
+  fatal:  { pts: 0,  cap: -100000,dis: -100,badge: "Catastrophic Route · Account Ended" }
+};
+const PASS = 70, DIS_PASS = 80, HINT_PTS = 2, HINT_DIS = 5;
+
+const SAM_REACT = {
+  right: [
+    "That is the route the desk takes. Notice how calm the right decision feels.",
+    "Correct. Governance is not glamorous. It is simply what survives.",
+    "Yes. You framed the risk before the opportunity. That ordering is the entire Code.",
+    "Well governed. Restraint applied at the correct moment is the edge itself."
+  ],
+  partial: [
+    "Half right. The instinct is sound but the structure is missing, and structure is what gets paid.",
+    "You are close. A partially right route repeated a thousand times is a slow leak, not an edge.",
+    "I understand why you chose it. Now read why the desk would not."
+  ],
+  wrong: [
+    "Stop. Read the danger carefully, because this route feels reasonable, and that is exactly why it is expensive.",
+    "This is the retail reflex. The market is engineered to reward it just often enough to keep you doing it.",
+    "Wrong route. Not because it never works, but because it cannot be governed."
+  ],
+  fatal: [
+    "This is the route that ends accounts. Not over months. In one session.",
+    "I have watched intelligent people take this exact path. None of them are still trading.",
+    "Catastrophic. The market does not punish you for being wrong. It punishes you for being wrong with size and no exit."
+  ]
+};
+
+const LEVELS = [
+{
+  tag:"Level I · Novice", name:"First Contact", sub:"For people who know nothing about trading. Yet.",
+  intro:"Welcome. I am Sam Onigbanjo. You know nothing about trading, which means you have nothing to unlearn. That is an advantage. Five scenarios. Choose your route through each.",
+  bridge:"You now know more than most people who have already funded an account. The next level builds your foundations.",
+  scenarios:[
+  { t:"The Instagram Millionaire", s:"A friend shows you an Instagram trader posting rented supercars and promising 300% monthly returns, guaranteed. You have £2,000 in savings and the trader says slots close tonight.", q:"What is your route?", hint:"Ask yourself one question: who, in legitimate finance, is allowed to use the word guaranteed?", o:[
+    {v:"right", t:"Walk away. No legitimate firm guarantees returns, and a deadline of tonight is pressure, not opportunity. Learn the basics first.", w:"No legitimate market participant guarantees returns, ever. Pension funds with billions and PhDs cannot guarantee 3% a year; a stranger guaranteeing 300% a month is telling you precisely what he is. The 'slots close tonight' pressure exists to stop you doing exactly what you just did: thinking."},
+    {v:"partial", t:"Ask him for broker statements and screenshots proving his results over the last year, then decide once you have checked them carefully.", w:"The verification instinct is correct, but the method fails. Screenshots, account statements and even live 'results calls' are trivially faked. Real verification means regulated audited track records, which this person will never have. You asked the right question of the wrong source."},
+    {v:"wrong", t:"Send a small test amount of £200 first. If the withdrawals work, you will know it is genuine before you commit any more.", w:"Danger: this is the scam working as designed. The £200 will 'grow' beautifully on a fake dashboard, because the small win is engineered bait for the real extraction: your £2,000, then a 'withdrawal fee', then whatever you can borrow. You are not testing them. They are testing you."},
+    {v:"fatal", t:"Send the full £2,000 now. Chances like this close fast, and hesitation is why most people never change their finances.", w:"Consequence: total loss with no recourse. The money typically moves through unrecoverable channels within hours. Victims are then placed on 'sucker lists' and re-targeted by recovery scammers offering to retrieve the funds, for a fee. One decision, two harvests."}
+  ]},
+  { t:"What Is This, Really?", s:"Before any chart, any account, any video course, you need one honest sentence about what forex trading actually is.", q:"Which understanding do you adopt?", hint:"The honest definition includes who is on the other side of your trade.", o:[
+    {v:"right", t:"Exchanging one currency for another to benefit from rate changes, usually with a bank, fund or algorithm on the other side.", w:"This is the institutional-grade definition because it includes the opponent. Every trade has a counterparty, and in FX the counterparty ecosystem is the most heavily capitalised, best informed on earth. Respecting that fact is the beginning of decision governance."},
+    {v:"partial", t:"Buying the currencies that are going up and selling them later at a higher price than I paid, much like buying shares.", w:"Half true. Currencies only rise relative to other currencies, and you can profit from falls by selling short. More importantly, 'buying what goes up' describes the outcome you want, not a decision process. A definition that contains no process cannot protect you."},
+    {v:"wrong", t:"A flexible way to build a steady second income from home, a few hours a day around my existing job and family.", w:"Danger: the word 'income' creates an obligation to trade daily, and obligation is the enemy of selectivity. Traders who need this month's rent from the market take trades the market never offered. Trading is the conversion of governed decisions into occasional asymmetric gains. It is the opposite of a salary."},
+    {v:"fatal", t:"A skill I can learn properly on a weekend course, then grow quickly by using the leverage the broker offers me.", w:"Consequence: maximum confidence meets maximum leverage with minimum experience. Regulators across the UK and EU require brokers to disclose that the substantial majority of retail accounts lose money. The weekend masters are not the exception in that statistic. They are its main supply."}
+  ]},
+  { t:"The Leverage Lever", s:"You open a demo broker account and see an option that reads: Leverage 1:500. It sounds like a gift.", q:"What does leverage actually mean for you?", hint:"Whatever it does to your gains, it does identically to your losses. Now re-read the offer.", o:[
+    {v:"right", t:"It multiplies losses exactly as much as gains. At 1:500 a tiny move against me can wipe out my margin, so it must be governed.", w:"Correct. At 1:500, a 0.2% move against a fully levered position wipes the margin behind it, and currencies move 0.2% in minutes. Institutions use leverage sparingly against hedged books. Brokers offer it generously because amplified activity, win or lose, is their revenue. In the UK, the FCA caps retail leverage at 30:1 on major currency pairs, so an offer of 1:500 usually means a broker operating outside UK retail protections."},
+    {v:"partial", t:"It lets me control a much larger position with a small deposit, so every pound of my capital works harder for me on each trade.", w:"Accurate and dangerously incomplete. You described the marketing brochure: the loss side of the same sentence is missing. Money that 'works harder' in both directions is not working harder. It is simply moving faster, including toward zero."},
+    {v:"wrong", t:"Choose the highest leverage on offer. I do not have to use all of it, and having the room available keeps me flexible.", w:"Danger: available leverage gets used. Under pressure, the option to oversize becomes the decision to oversize; that is how human beings work. Governance means removing the catastrophic option in calm moments so it cannot be chosen in emotional ones."},
+    {v:"fatal", t:"It is the broker's money I trade with, so if a leveraged trade goes badly the broker carries most of the loss, not me.", w:"Consequence: a margin call arrives, the position is force-closed at the worst price, and depending on jurisdiction and account type you may owe more than you deposited. People have learned this definition error from a single Swiss franc-style move. It is the most expensive misunderstanding in retail trading."}
+  ]},
+  { t:"Demo or Live?", s:"You have watched ten YouTube videos. You feel ready, genuinely ready. Your savings account is open in the next tab.", q:"What is your first real move?", hint:"What are you actually trying to train at this stage: profit, or process?", o:[
+    {v:"right", t:"Trade a demo account under written rules for two to three months, journaling every decision as if the money were real.", w:"Correct. At this stage you are not training profit, you are training process: sizing, stops, patience, journaling. Demo is where process errors are free. The traders who skip this stage still pay for it; they simply pay in live capital, at a far worse exchange rate."},
+    {v:"partial", t:"Open a small live account straight away, because a demo can never teach me how losing real money actually feels in the moment.", w:"The psychology point is genuinely true, demo cannot replicate the feeling of real loss. But sequencing matters: psychology training is stage two. Going live before your process exists means funding your tuition with capital instead of structure, and you will learn fear before you learn skill."},
+    {v:"wrong", t:"Go live with my savings now. Real stakes force me to concentrate, and pressure is the fastest teacher there is.", w:"Danger: pressure does not accelerate learning, it degrades decision quality, which is the very thing you are trying to build. Stress narrows thinking and rewards impulse. You will not learn trading faster. You will learn panic fluently."},
+    {v:"fatal", t:"Borrow on a credit card so the account is big enough for the profits to be worth my time from the very start.", w:"Consequence: debt plus leverage plus inexperience is the single fastest documented route to serious financial harm in retail trading. The interest clock runs whether you win or lose, which forces overtrading, which guarantees the losses arrive sooner. This route does not risk your account. It risks your life stability."}
+  ]},
+  { t:"Where the Money Goes", s:"A fact sits behind every regulated broker's risk warning: the substantial majority of retail accounts lose money. Before you join the market, you should know where that money actually goes.", q:"What is the primary destination of lost retail capital?", hint:"Costs and tricks exist, but neither is the main killer. Look in the mirror of behaviour.", o:[
+    {v:"right", t:"Mostly into the cost of ungoverned decisions: overtrading, misused leverage and no risk plan. Restraint is what most never apply.", w:"Correct, and this is the founding insight of Aulteus Logic. Retail traders rarely lose to a single catastrophe; they bleed out through hundreds of small, ungoverned decisions that each felt reasonable. The fix is not more information. It is a decision framework that governs when information is allowed to become action."},
+    {v:"partial", t:"Mostly to brokers. Spreads, commissions and overnight financing fees are charged on every trade, win or lose, and they compound over a year.", w:"A real cost, worth minimising, but not the main killer. Spreads explain a slow drip; they do not explain the substantial majority losing. A disciplined trader survives broker costs for decades. An undisciplined one cannot survive zero-fee trading for a year."},
+    {v:"wrong", t:"Mostly to professional traders using better indicators and paid tools that ordinary retail traders simply cannot get.", w:"Danger: this belief sends you on the indicator-buying treadmill, purchasing tool after tool while the actual problem, your decision process, remains untouched. Institutions do not win on secret paint. They win on process, capital and patience. There is no indicator shop at Goldman Sachs."},
+    {v:"fatal", t:"The market is rigged against retail, so the only way to win is to bet bigger and bolder than the people rigging it.", w:"Consequence: 'rigged, therefore bet bigger' is the logic of martingale, and martingale is the one strategy with a mathematical guarantee of ruin. The market does have structural traps for retail, which is exactly why the answer is governance and selectivity, never escalation. This route turns a hard game into a finished one."}
+  ]}
+]},
+{
+  tag:"Level II · Beginner", name:"Foundations", sub:"You have an idea of trading. Now build the floor that everything stands on.",
+  intro:"You returned. Good. This level is about the four foundations: risk per trade, the stop loss, the losing streak, and the news event. Master these and you remove the most common reasons new traders fail.",
+  bridge:"Foundations set. Next we read the market the way the desk reads it: structure, liquidity and timeframes.",
+  scenarios:[
+  { t:"The First Question of Sizing", s:"You have a £10,000 account and a trade idea you believe in strongly. Belief is exactly the condition under which sizing errors happen.", q:"How much do you risk on this single idea?", hint:"The professional question is never 'how much can I make'. It is 'what can I survive a streak of'.", o:[
+    {v:"right", t:"About 1%, so £100. I set my stop where the idea is proven wrong, then work out the position size from that distance.", w:"Correct, and notice the ordering: stop first, size second. At 1% you can absorb a ten-loss streak, which any real strategy will eventually produce, and still be standing with 90% of your capital. Sizing is not about this trade. It is about guaranteeing there is a next trade."},
+    {v:"partial", t:"About 5%. At 1% the account grows far too slowly, and I am here to build capital, not to protect a museum piece forever.", w:"Survivable, briefly. The growth logic feels right but the streak math is unforgiving: six consecutive losses at 5% is a 26% drawdown, and you now need a 36% gain just to recover. Worse, psychology cracks before arithmetic does; traders in deep drawdown stop following any plan at all."},
+    {v:"wrong", t:"Whatever the broker's margin allows. Its system will not let me open a position bigger than I can actually afford to hold.", w:"Danger: margin is the broker's protection, not yours. It measures what keeps the position open, not what your strategy can survive. Sizing by margin means your leverage, not your logic, is making the decision, and one volatile session settles the matter permanently."},
+    {v:"fatal", t:"About 50%. A Telegram group I trust has flagged this as a sure move, and when conviction is this strong it deserves size.", w:"Consequence: you are two coin flips from zero. And consider the source: any 'sure thing' broadcast to thousands of followers is, at best, noise, and at worst exit liquidity, a crowd buying so earlier entrants can sell. Maximum conviction plus maximum size is the precise signature of every blown account."}
+  ]},
+  { t:"Where the Stop Belongs", s:"Every trade needs a point at which you accept you were wrong. Where you place that point determines whether your losses are planned costs or random tragedies.", q:"Where does your stop loss belong?", hint:"The stop is not a pain threshold. It is the price at which your reason for the trade no longer exists.", o:[
+    {v:"right", t:"Where the trade idea is clearly proven wrong on the chart, then size the position so that distance costs exactly 1%.", w:"Correct. The stop answers a logical question, 'where is my idea dead?', and the position size answers the financial one, 'how much do I lose if it dies?'. Separated this way, every loss becomes a planned business cost. Merged, every loss is a surprise."},
+    {v:"partial", t:"A fixed 20 pips on every trade. Consistency is what matters most, and it keeps the risk on every single trade identical.", w:"The consistency instinct is right, but you have standardised the wrong variable. The market does not know about your 20 pips; volatility and structure differ across every pair and session. Your stop will sit inside random noise on some trades and absurdly far on others. Standardise the £ risk, let structure set the distance."},
+    {v:"wrong", t:"No hard stop in the market. I watch every open trade closely and close it by hand the moment it starts turning against me.", w:"Danger: 'watching closely' works until the moment it matters, then it becomes hoping closely. Under real loss, humans renegotiate: one more candle, wait for the bounce. A stop is a decision made by your calm self and enforced against your stressed self. Remove it and the stressed self runs the account."},
+    {v:"fatal", t:"Set a stop, but move it further away if price gets close, so I am not knocked out just before the reversal comes.", w:"Consequence: this single habit, stop-widening, converts small planned losses into account-defining ones, and it is arguably the most common way disciplined-looking traders die. Each widening feels tiny and reasonable. The sum of them is a position with no exit, which is a position that owns you."}
+  ]},
+  { t:"Three Losses Before Lunch", s:"You lost three trades in a row this morning. All within your rules, all small. The London session is still open, the charts are still moving, and something in your chest wants the morning back.", q:"What is your route?", hint:"Identify which variable is now compromised. It is not the strategy and it is not the market.", o:[
+    {v:"right", t:"Stop for the day. Three small losses within the rules is normal variance, and the urge to win it back is the signal to step away.", w:"Correct. The strategy did not break; your neutrality did. 'Win it back' is the market renting space in your head, and decisions made from that state are not trading, they are gambling with a trading interface. Walking away flat-minded is one of the highest-paid skills in this profession."},
+    {v:"partial", t:"Halve my position size and keep trading. The risk is lower, and I stay engaged with the market while the session is still open.", w:"Harm reduction, not a fix. The compromised variable is your judgement, and a tilted mind makes poor decisions at half size too, just more slowly. You have answered a psychological problem with a mathematical adjustment. The desk answer is simpler: the decision-maker is offline, so no decisions get made."},
+    {v:"wrong", t:"Double my size on the next setup. My strategy wins more often than it loses, so a winner is statistically due.", w:"Danger: this is revenge trading wearing a statistics costume. Each trade is independent; the market owes you nothing for your morning. Doubling after losses means your size is now set by your emotional deficit rather than your plan, and the market is ruthlessly efficient at finding traders priced by emotion."},
+    {v:"fatal", t:"Remove the stops and add to the losing positions until they come back. Over time, prices usually return to where they were.", w:"Consequence: 'they always come back' is true right up until the one trending day when they do not, and that day liquidates everything, including the profits of every patient month before it. No stops plus averaging down is not a strategy. It is a countdown."}
+  ]},
+  { t:"Ten Minutes to NFP", s:"US Non-Farm Payrolls releases in ten minutes. Your textbook EURUSD setup has just completed, every criterion met. The setup does not know the news is coming. You do.", q:"What is your route?", hint:"Can you measure your risk in the sixty seconds after the release? If risk cannot be measured, can it be governed?", o:[
+    {v:"right", t:"Stand aside. Spreads widen and stops slip during the release. If the setup is real, it will still be there once the market reprices.", w:"Correct. Around major releases your stop is a suggestion, not a contract: price can gap straight through it and fill you far beyond. Governance requires measurable risk, and for those minutes risk is unmeasurable. The setup may even improve after the print. Patience costs nothing here; impatience can cost the week."},
+    {v:"partial", t:"Take the trade at half size. The setup is valid, and cutting the size respects the extra risk that the release brings.", w:"Half size halves a number you cannot calculate. Slippage during NFP can be ten times normal, so 'half' of an unmeasurable risk is still unmeasurable. The instinct to scale risk to uncertainty is institutional; applying it to a moment when risk has no upper bound is not."},
+    {v:"wrong", t:"Take it at full size. The news is short-term noise, and my setup is based on structure, which matters more than one number.", w:"Danger: structure governs where price wants to go; a payroll surprise decides whether your stop even functions on the way. You are not wrong that structure matters more over days. You are wrong about the next four minutes, and the next four minutes is where your stop lives."},
+    {v:"fatal", t:"Enter just before the release so I am already positioned for the spike, at a larger size than usual to make it count.", w:"Consequence: the release whipsaws both directions within seconds; both the buyers and the sellers of the first move can be stopped out before the real move begins. Add tenfold slippage and maximum size, and this is exactly where retail margin calls are most likely. You are not trading the news. You are donating to it."}
+  ]},
+  { t:"The Mathematics of Getting Paid", s:"Two setups present today. Setup A: risk 1 to make 2.5 at a structural target, historical win rate around 45%. Setup B: win rate around 80%, but it risks 3 to make 1.", q:"Which do you take, and why?", hint:"Run both through one sentence: (win% × reward) minus (loss% × risk). Feelings cannot do this arithmetic.", o:[
+    {v:"right", t:"Setup A. Its expectancy is about +0.575R per trade against +0.2R for B. I am paid by expectancy, not by how often I am right.", w:"Correct. A: (0.45 × 2.5) − (0.55 × 1) = +0.575R per trade. B: (0.8 × 1) − (0.2 × 3) = +0.2R, and that is before costs and before one bad streak. Professionals happily feel wrong 55% of the time to be paid correctly. Amateurs pay heavily to feel right."},
+    {v:"partial", t:"Setup B. An 80% win rate is a real edge, and a steady run of small wins builds both the account and my confidence over time.", w:"It is positive expectancy, narrowly, so this is not a disaster. But you chose comfort over mathematics: one loss erases three wins, costs eat a thin 0.2R edge quickly, and the psychological crash when the 20% arrives in a cluster, and it will, breaks the very confidence you were buying. The win rate was the headline. Expectancy was the contract."},
+    {v:"wrong", t:"Neither. I trade whichever market has moved most today, because big movement means big opportunity and opportunity beats theory.", w:"Danger: movement without a defined edge is just risk in motion. Chasing the day's biggest mover means entering late, against the position of whoever caused the move, with no structural invalidation point. Volatility is the cost of opportunity, not the opportunity itself."},
+    {v:"fatal", t:"Both, plus two correlated pairs. Spreading across more positions gives me more chances to win today.", w:"Consequence: EURUSD, GBPUSD and their cousins move substantially on the same variable, the dollar. Four 'diversified' positions can be one large bet wearing four names, and a single dollar move hits them simultaneously, multiplying your intended risk fourfold without a single rule technically broken. Correlation is how careful traders blow up politely."}
+  ]}
+]},
+{
+  tag:"Level III · Intermediate", name:"Reading Structure", sub:"Stop seeing candles. Start seeing decisions made by people with more capital than you.",
+  intro:"Now we read the market the way the desk reads it. Structure, liquidity, timeframes, volatility regimes, and the relationships between instruments. From here, the wrong answers start looking intelligent. Stay sharp.",
+  bridge:"You can read the battlefield. Next level: the institutional lens, where volume, macro and drawdown protocols govern everything.",
+  scenarios:[
+  { t:"The Drop Inside the Trend", s:"GBPUSD daily chart: higher highs and higher lows for three consecutive weeks, a clean uptrend. This morning the 1-hour chart shows a sharp, fast drop. Your social feed is calling a crash.", q:"How do you frame what you are seeing?", hint:"Whose timeframe are you trading? The answer decides which chart is signal and which is noise.", o:[
+    {v:"right", t:"Treat the 1H drop as a likely pullback inside the daily uptrend. Wait for structure to confirm at a level. For now, no action.", w:"Correct. Higher timeframes are where the larger capital makes decisions, and three weeks of daily structure outweighs three hours of panic. Pullbacks are how uptrends breathe, and how institutions build positions at better prices. Waiting for confirmation at a level is not hesitation. It is the framework refusing to act on noise."},
+    {v:"partial", t:"Short the 1H breakdown. Momentum is clearly down right now, and the job is to trade what is in front of me, not last week.", w:"Tradeable for a specialist, but understand what you are doing: fighting the dominant flow for a counter-trend scalp. That demands precise entries, fast exits and the humility to be flat in minutes, a skill set most intermediates believe they have and do not. Right tactic, wrong stage of development, and the timeframe conflict was the warning."},
+    {v:"wrong", t:"Buy straight away. The daily trend is up, this drop is a discount, and in a strong trend the best discounts never wait for slow traders to act.", w:"Danger: trend-following without location. A pullback can travel a long way and still leave the daily trend intact, which means 'buy any dip instantly' catches falling knives mid-flight with no structural level behind you and no logical stop. The trend tells you the direction to prefer. It does not tell you the price to act at."},
+    {v:"fatal", t:"Short now with a large position and no fixed stop. A drop this fast after three weeks up is the start of a crash.", w:"Consequence: speed is not direction; sharp counter-moves inside uptrends are routine and frequently engineered. When the daily trend resumes, and statistically it usually does, you are holding maximum size against three weeks of structure with no exit defined. This is the trade that does not just lose. It compounds against you while you negotiate with it."}
+  ]},
+  { t:"The Spike Below Support", s:"Price spikes hard below an obvious support level, the one every textbook and every retail trader can see, then snaps back above it within minutes on heavy volume.", q:"What did you most likely just witness?", hint:"Ask the institutional question: whose orders were resting just below that obvious level, and who needed them?", o:[
+    {v:"right", t:"A liquidity sweep. Stops below obvious support are sell orders, larger buyers filled against them, and the reclaim is information.", w:"Correct. Large positions need large opposing liquidity, and the densest pool of it sits just beyond obvious levels, in the form of stops. The sweep-and-reclaim is one of the most repeatable institutional footprints on any chart. Once you see stops as fuel rather than protection-gone-wrong, the level stops being a line and becomes a mechanism."},
+    {v:"partial", t:"A failed breakdown. Support broke for a moment, but sellers could not hold price below it, so the level is still valid.", w:"The shape is right and 'failed breakdown' will keep you out of the worst trade here. But the description is missing its engine: why do these failures cluster at obvious levels with volume signatures? Without the liquidity mechanism you can name the pattern after it happens but never anticipate it before. The why is what compounds."},
+    {v:"wrong", t:"A genuine break. Support has gone, the market has turned bearish, and I should start looking for short trades from here.", w:"Danger: this is the exact read the sweep is designed to produce. Shorting the 'break' places you in the crowd whose stops and breakout entries just financed an institutional fill, and the reclaim that follows runs directly over your position. A close beyond a level on sustained volume is a break. A wick through it that snaps back is a harvest."},
+    {v:"fatal", t:"A glitch in my broker's price feed. Real levels are not broken and recovered within minutes, so I ignore it and carry on.", w:"Consequence: you have just classified the single most informative event on the chart as an error, which means your framework can no longer learn from the market's clearest institutional tell. Traders who explain away disconfirming evidence do not stay wrong once. They industrialise being wrong. The market was speaking. You hung up."}
+  ]},
+  { t:"The Order of Operations", s:"Two traders use identical indicators, identical pairs, identical hours. One is consistently profitable. The difference, almost always, is the sequence in which they make decisions.", q:"What is the correct multi-timeframe workflow?", hint:"Decide in the order of capital: the biggest money sets the direction, the smallest money only sets the entry.", o:[
+    {v:"right", t:"Top down. Weekly and daily set the bias, the 4H sets the area, the 1H or 15m gives the trigger. If any layer disagrees, no action.", w:"Correct, and note the last clause, it is the entire point. The hierarchy mirrors capital: the timeframes that move trillions outrank the ones that move your entry by three pips. Requiring agreement across layers is what converts a chart-reading habit into a governance system, because disagreement has a defined output: nothing."},
+    {v:"partial", t:"Daily chart for the bias, then straight to the 5-minute chart for entries. Bias plus trigger is all I need, and the rest is clutter.", w:"The skeleton is right, the skipped middle is where it breaks. Without the 4H layer you have no definition of where the daily bias is actually actionable, so you will end up taking 5-minute triggers in dead mid-range territory the 4H would have dismissed instantly. Bias tells you which way. The middle timeframe tells you where. You kept which and deleted where."},
+    {v:"wrong", t:"Bottom up. Find a strong 5-minute signal first, then check the higher timeframes to confirm it before I enter the trade.", w:"Danger: this sequence feels diligent and is structurally corrupt. Once a juicy 5-minute signal exists, you are no longer checking the higher timeframes, you are searching them for permission, and a motivated search always finds something. Confirmation bias is not a character flaw; it is the guaranteed output of analysing in this order."},
+    {v:"fatal", t:"One timeframe is enough if the indicator is good. Using several timeframes adds complexity without adding any edge.", w:"Consequence: a single timeframe with no higher context will generate technically perfect signals directly against the dominant flow, indefinitely, and you will have no mechanism to know which ones those are. This trader does not blow up on one trade. They grind down over hundreds, blaming the indicator, replacing it, and repeating, the treadmill in its purest form."}
+  ]},
+  { t:"The Regime Has Changed", s:"Average true range on your main pair has doubled in two weeks. The stop distances that served you all quarter are now being clipped by what looks like random noise. Your strategy 'stopped working'.", q:"What is your route?", hint:"Two dials exist: stop distance and position size. The regime moved one. Which one restores your original £ risk?", o:[
+    {v:"right", t:"Widen stops to real structural levels and cut position size to match, so the £ risk per trade stays exactly the same.", w:"Correct. Volatility regimes change; your risk per trade must not. Doubling the stop distance while halving the size keeps every £ figure identical while letting the trade breathe at the market's new amplitude. This is what 'the strategy stopped working' usually means: the strategy was fine, the calibration was stale."},
+    {v:"partial", t:"Widen the stops to fit the new volatility, and keep the position size the same, because the strategy itself has not changed.", w:"You fixed the visible problem and silently doubled the invisible one. Same size across double the stop distance equals double the £ risk on every single trade, a change you never decided to make. This is the most common calibration error in trading precisely because nothing looks different on the chart. Audit the £ number, not the picture."},
+    {v:"wrong", t:"Keep the tight stops and simply take more trades. The extra attempts will make up for the extra stop-outs over the month.", w:"Danger: your stops are now inside the market's random noise, which means they trigger regardless of whether your ideas are right. Taking more trades in that condition is buying more tickets to a lottery you have mispriced, death by a thousand stop-outs, plus the costs of every one of them."},
+    {v:"fatal", t:"Double the size. Bigger moves deserve bigger positions, and a volatile market is the moment to press for returns.", w:"Consequence: double size into double volatility is quadruple risk, decided in the regime where gaps, slippage and margin calls concentrate. High-volatility regimes are precisely when institutions cut exposure and when retail, smelling action, raises it. One session of this can return a month of disciplined gains to the market with interest."}
+  ]},
+  { t:"Gold Says Yes, the Dollar Says No", s:"Your gold long setup is textbook: structure, level, trigger, all present. Final check: DXY, the dollar index, is breaking out upward with real momentum. Gold is priced in dollars.", q:"What is your route?", hint:"Your setup is one instrument's opinion. What is the rest of the board saying about the same variable?", o:[
+    {v:"right", t:"Pause the long. Gold and the dollar usually move in opposite directions, and a strong DXY breakout is evidence against my idea.", w:"Correct. Gold sustaining a rally into genuine dollar strength is rare; the inverse relationship is one of the most persistent in macro markets. Cross-instrument confirmation is exactly how the desk filters: every position is a claim about a variable, and the other instruments pricing that same variable get a vote. Today the board voted against you. Listen."},
+    {v:"partial", t:"Take the gold long at half size. The setup has earned an entry, and the dollar's strength earns a smaller position than usual.", w:"Better than ignorance, but examine the logic: you identified the strongest cross-asset signal on the board, then acted against it anyway, just politely. Sizing down is for ambiguity. This is not ambiguous, it is contradicted. The framework's answer to direct disconfirming evidence is not a smaller yes. It is not yet."},
+    {v:"wrong", t:"Ignore DXY. I trade gold, the gold chart already holds everything I need to know, and checking other markets only leads to analysis paralysis.", w:"Danger: instrument tunnel vision. Gold's price is a fraction with dollars in the denominator; pretending the denominator is irrelevant means half your trade is invisible to you. The trader who only reads one chart is always the last to know why it suddenly stopped behaving."},
+    {v:"fatal", t:"Go long gold and long the dollar at full size each. If they move in opposite directions, that is a natural hedge.", w:"Consequence: you have built inverted bets on the same variable and called it diversification. If the relationship holds, the positions strangle each other while you pay spread, swap and slippage on both, guaranteed bleed. If it temporarily breaks, both can lose together. This is not a hedge. It is a misunderstanding, leveraged."}
+  ]}
+]},
+{
+  tag:"Level IV · Slightly Advanced", name:"The Institutional Lens", sub:"Volume, macro windows, drawdown protocol, and the discipline to obey your own circuit breakers.",
+  intro:"From here the questions stop being about charts and start being about you. Volume tells you who is acting. Macro tells you when not to. And the drawdown protocol decides whether you are still here next year. Proceed.",
+  bridge:"One level remains: the War Room itself, where every input you have trained converges into single decisions.",
+  scenarios:[
+  { t:"Effort Versus Result", s:"Price climbs toward a 4-hour supply zone, but volume declines on every leg of the rise. At the zone, a single high-volume rejection candle prints, sharp and decisive.", q:"What is the decision?", hint:"Read it as physics: rising price is effort. What does fading volume say about the force behind the effort?", o:[
+    {v:"right", t:"Effort and result are diverging. A short is worth evaluating, with the stop beyond the zone and size set by my fixed risk.", w:"Correct. Declining volume into resistance means the advance is running out of participants, and the high-volume rejection shows committed sellers meeting it exactly where they should. Note the governance in your own phrasing: worth evaluating, not 'this is certain'. The framework grades evidence; it never grants certainty."},
+    {v:"partial", t:"Promising, but I wait for three more confirming candles first. Waiting for confirmation is what separates professionals from gamblers.", w:"Caution is a virtue with a price tag, and here the price is the trade. By full confirmation the move is underway, your entry is worse, your stop is twice as far, and the asymmetry that made this worth doing is gone. Professionals do not wait for certainty. They act on defined evidence with defined risk, which you already had."},
+    {v:"wrong", t:"Buy the breakout as price reaches the zone. Momentum has carried it all the way here, and momentum will carry it through.", w:"Danger: you are buying the precise location where the volume evidence says institutions are distributing, selling their inventory to late-arriving momentum buyers. The fading volume was the warning that the move was exhausting, and the breakout-buyer crowd is the liquidity the rejection candle was made of. Location plus volume outranks momentum, every time."},
+    {v:"fatal", t:"Sell at ten times my normal size. Structure, volume and location all agree, and signals this clean are rare.", w:"Consequence: no signal, however clean, justifies abandoning sizing, because the signal contains information and the size contains your survival. Ten-times size means a routine 45% miss rate event now removes months of equity in one trade. Size is governance, not conviction. The moment conviction sets size, the framework is already dead; the account just has not noticed yet."}
+  ]},
+  { t:"The Macro Window", s:"Your swing setup needs three to four days to mature. The calendar: CPI prints tomorrow, FOMC the day after. Two repricing events sit directly inside your trade's lifespan.", q:"What is your route?", hint:"Your edge is structural. What kind of event can overrule structure entirely, and is one scheduled?", o:[
+    {v:"right", t:"No trade this week. CPI and FOMC can reprice everything regardless of my structure, so I keep my capital and reassess afterwards.", w:"Correct, and this is decision governance in its purest form: the analysis was good and the answer is still no. Your edge is structural; scheduled macro repricing overrules structure without consulting it. Often the appropriate outcome is no action, and that distinction is precisely what preserves capital. The setup, if real, will reform on the other side."},
+    {v:"partial", t:"Enter at half size with a wider stop that allows for the event volatility. The risk is respected and the opportunity is kept.", w:"You have quantified the unquantifiable. Event gaps do not respect stops, wide or otherwise; price can open beyond them and fill you wherever liquidity resumes. Half size against an unbounded risk is not half risk, it is an unknown number with a smaller font. The professional adjustment to unmeasurable risk is zero, not half."},
+    {v:"wrong", t:"Enter at full size. My analysis already allows for CPI expectations, and the market has priced the consensus in.", w:"Danger: the consensus is priced in; the surprise component is not, and the surprise component is the only part that moves markets. Nobody prices in the deviation, by definition. 'My analysis accounts for the event' is the sentence traders say before learning what a 60-pip gap through a stop feels like."},
+    {v:"fatal", t:"Enter at maximum size timed for the CPI print. It will be the most volatile day of the month.", w:"Consequence: this is not a trade, it is a coin flip with slippage, taken at maximum size into the exact minutes when spreads explode and stops are decorative. A single adverse print can multiply your intended loss several times before your platform even responds. The market reserves its fastest punishments for size deployed into scheduled chaos."}
+  ]},
+  { t:"The Winner That Keeps Winning", s:"You are +2R, and price has just touched the structural target you defined before entry. It is still moving in your favour, fast. Every instinct says this one is different.", q:"What is the route?", hint:"At what moment was your highest-quality thinking done: now, mid-profit and flooded, or before entry, when you were neutral?", o:[
+    {v:"right", t:"Follow the written plan: take profit at the target, or run the trailing rules only if they were written down before entry.", w:"Correct. The plan was authored by the most neutral version of you that will ever look at this trade; the person watching profits tick is chemically compromised in the happy direction, which is no less dangerous than fear. Systems beat luck, and they also beat euphoria. Banking the planned 2R, repeated for years, is the entire business."},
+    {v:"partial", t:"Move the stop to breakeven and hold the full position for a bigger move. My risk is now zero and the upside is wide open.", w:"Reasonable mechanics, wrong moment to invent them. If trail-beyond-target was in your written plan, this is simply execution. Decided now, mid-profit, it is improvisation, and 'risk-free' is not quite true either: you are risking the entire open 2R gain, which is real money by any honest accounting. The test is one question: was this written down before entry?"},
+    {v:"wrong", t:"Remove the target and let it run on feel. Fixed targets cap winners, and the big trades are what make the year.", w:"Danger: 'let it run on feel' means greed is now your exit strategy, and greed has no exit strategy. Winners managed by feel routinely round-trip to breakeven or worse, because there is never a moment that feels like the top until it is well past. The big trades do make the year, when capturing them was in the plan, not when the plan was deleted mid-trade."},
+    {v:"fatal", t:"Add to the position here at the target. The trade has proven itself, and adding to winners is what professionals do.", w:"Consequence: you are placing your largest exposure at your worst price, the precise location your own analysis nominated as where the move exhausts. A routine pullback from your target now erases the entire gain and drags the position negative at maximum size. Professionals press winners early, at structure, by plan. Pressing at the target is buying the top of your own trade."}
+  ]},
+  { t:"Eight Percent Down", s:"Your written plan caps monthly drawdown at 10%. It is the 19th of the month and you are down 8%. The plan was written by you, in a calm month, for exactly this moment.", q:"What is the route?", hint:"What is a circuit breaker for: stopping at the line, or making sure you never reach it at speed?", o:[
+    {v:"right", t:"Halve my risk per trade now, and stop completely for the month if I reach 10%. The cap is a circuit breaker, not a target.", w:"Correct. At 8% with full risk, two routine losses end your month at the line; halving risk means the breaker engages gently rather than being struck at speed. This is the institutional pattern: risk reductions trigger before the hard limit, because the limit is the failure state, not the target. You are managing toward survival, which is the only edge that compounds."},
+    {v:"partial", t:"Keep trading at normal size until I reach exactly 10%, then stop as the plan says. The rules are the rules, and 8% is not 10%.", w:"Technically inside the rules, and that matters, you have not broken anything. But you are driving at full speed toward a wall you can see, planning to brake at the wall. The drawdown cap defines where trading must stop, not how to behave on approach. Rule-following is the floor of governance. Anticipation is the actual skill."},
+    {v:"wrong", t:"Raise my risk a little to recover before month end. Finishing down 8% looks like failure, and a focused push can fix it.", w:"Danger: drawdown arithmetic is merciless, an 8% hole needs 8.7% just to reach flat, and raising risk to chase it deepens the hole faster than it fills. Worse, your motive has changed: trades are now selected to repair the month, not because the market offered them. The calendar is not a trading signal. It never was."},
+    {v:"fatal", t:"Suspend the cap for the rest of this month. It was written for normal conditions, and this month has not been normal.", w:"Consequence: this is how 8% becomes 40%. The cap was written by the calm version of you precisely because the desperate version, the one proposing this, was predicted and could not be trusted. Every month feels abnormal from inside a drawdown; that feeling is the condition the rule exists for. Accounts rarely survive the month the rules died, and the trader rarely sees it happening."}
+  ]},
+  { t:"The Unease You Cannot Name", s:"A trade meets every written criterion: structure, volume, timeframe alignment, calendar clear. But something about the macro flow bothers you, and you cannot articulate what. The framework says yes. Something older says wait.", q:"What does decision governance do with an instinct it cannot verify?", hint:"The signal is unverified, not worthless. What does a good system do with low-confidence information: obey it, delete it, or weight it?", o:[
+    {v:"right", t:"Reduce size or pass, and write the unease in my journal. I give it some weight, not full control, and test it over time.", w:"Correct, and this is the mature reading of governance: a framework that can register low-confidence information without being ruled by it. Experienced pattern recognition sometimes fires before language catches up. By logging every instance, you let the journal deliver the verdict over twenty occurrences: if the unease predicts nothing, you will retire it with evidence; if it predicts trouble, you will formalise it. Either way, the system learns."},
+    {v:"partial", t:"Take the trade at full size. A framework exists to override feelings, and an unease I cannot explain is just a feeling.", w:"Principled, and the discipline is real, this answer beats most. But a framework that cannot even register new information is a cage, not a code. The goal was never to delete instinct; it was to stop instinct from sizing positions. Full size with the discomfort unlogged means the information is destroyed instead of audited. Obey the framework, yes, and also teach it."},
+    {v:"wrong", t:"Skip every trade that carries any unease, permanently. Protecting capital comes first, and doubt is a cost I choose not to pay.", w:"Danger: untested feelings, granted permanent veto power, harden into superstition. Unease will attach itself to Mondays, to certain pairs, to whatever preceded your last loss, and your tradeable universe will quietly shrink until the edge starves. Doubt deserves a hearing and a journal entry. It does not deserve an unaudited throne."},
+    {v:"fatal", t:"Take double size on purpose, to train the hesitation out of me. Doubt only grows if I give in to it.", w:"Consequence: you have replaced one emotional override with a worse one, ego is now your position sizer, and it is sizing out of spite. Trading to prove something to yourself means the trade has stopped being about the market at all. Doubled size, chosen as self-punishment, on the trade your own pattern-recognition flagged: if the unease was right, this is the maximum-damage configuration. Discipline is not aggression. It is neutrality, enforced."}
+  ]}
+]},
+{
+  tag:"Level V · Advanced", name:"The War Room", sub:"Every input converges. Structure, volume, macro, correlation, psychology, capital. One decision at a time.",
+  intro:"The final room. No more single-concept questions. Here, everything you have trained fires at once, and the difference between right and catastrophic is the quality of your governance under pressure. This is where the Code either lives in you or it does not.",
+  bridge:"",
+  scenarios:[
+  { t:"Full Alignment", s:"Weekly bias bullish. Daily in agreement. 4H sitting at a discount zone with a clean invalidation level. 1H trigger confirmed. Volume supportive. No red-flag macro for 48 hours. DXY agrees. Every layer of the framework, for once, says the same thing.", q:"What is the decision, and what governs it?", hint:"The framework's job was saying no for weeks. What is its job on the rare day everything says yes?", o:[
+    {v:"right", t:"Act at standard risk, with the stop at the invalidation level and the target set in advance. No improvising once I am in.", w:"Correct. Full-alignment states are rare, and they are the entire reason the framework exists: weeks of governed inaction earn the right to act decisively when every layer agrees. Standard risk, because alignment raises probability, never certainty. This is the institutional rhythm: long patience, brief decisiveness, no drama in either direction."},
+    {v:"partial", t:"Wait for one more signal, a daily close beyond the nearest swing, before entering. Alignment this good is worth protecting from a false start.", w:"Not a disaster: waiting costs you the opportunity, not your capital. But every layer of your own framework already said yes, and demanding a signal it never required means fear, not the framework, is now deciding. Full-alignment states are rare, which is exactly what makes this habit expensive over a year. Caution is a virtue until it becomes a decision never to decide."},
+    {v:"wrong", t:"Act at double my normal size. If standard risk suits ordinary setups, the best setup of the quarter deserves more.", w:"Danger: the sizing logic sounds rigorous and is retail behaviour in institutional clothing. The moment setup quality starts scaling your size, excitement has a seat at the sizing table. Alignment raises probability, never certainty, and one routine loss at double size undoes two normal wins. Some frameworks allow size tiers, but only tiers written down in advance. Deciding it here, mid-excitement, is exactly what predefined rules exist to prevent."},
+    {v:"fatal", t:"Act, and repeat the trade across four correlated pairs at full size each to capture the move everywhere it shows.", w:"Consequence: one thesis, five times the exposure, zero diversification, the positions share a single point of failure. The invalidation event that stops one stops all five simultaneously, turning a planned 1% loss into 5% from a single decision. This is how disciplined-looking traders take catastrophic hits without breaking a single individual rule. Correlation risk is the War Room's quietest killer."}
+  ]},
+  { t:"The Gap Beyond the Stop", s:"You are long indices within your rules. Overnight, a genuine geopolitical shock, unscheduled and unforecastable, gaps futures 4% against you. The open will fill you far beyond your stop. Your planned loss has already been exceeded while you slept.", q:"The market opens in one minute. What is the route?", hint:"The planned loss is gone; that decision was taken from you. The only live question is what governs the exposure that remains.", o:[
+    {v:"right", t:"Exit at the open, as the protocol says. Gap risk is why exposure caps exist. Re-evaluate once flat. Capital first, opinions later.", w:"Correct, and this is the hardest execution in trading because every instinct screams for a better price. The position now carries undefined risk in maximum uncertainty, the exact condition governance prohibits. Flat, you can think; in the position, you can only hope. The loss exceeded plan through gap risk, which is precisely why position limits kept it survivable. Protocol held. You are still here."},
+    {v:"partial", t:"Hold for the first bounce, then exit into it. Panic opens often retrace, and selling the exact low is what amateurs do.", w:"Sometimes this works, which is exactly what makes it dangerous to learn from. The mechanism is real, panic opens do often retrace, but you are now trading hope with undefined risk in the most uncertain conditions of the year, and if the bounce does not come the next leg down is taken at full size. The desk version of this requires a hard time-and-price limit decided before the open. Without one, it is a wish."},
+    {v:"wrong", t:"Hold without adding or selling. Markets have always recovered from geopolitical shocks in the past, and the history on that point is very clear indeed.", w:"Danger: history says markets usually recover, it says nothing about whether your margin survives the journey. Recoveries take weeks or years; your account lives day to day. 'It always comes back' assumes unlimited time and unlimited margin, and you have neither. You are not investing through a crisis. You are levered, underwater and unprotected in one."},
+    {v:"fatal", t:"Triple the position at the open. The panic is the opportunity, and I can win back the whole loss by tonight.", w:"Consequence: this is the decision pattern that ends trading careers in a single session, maximum conviction at maximum uncertainty with maximum size. If the shock deepens, and unscheduled shocks frequently come in waves, the tripled position does not just lose, it liquidates the account and can exceed it. Uncertainty is highest at the precise moment conviction feels strongest. That inversion is the most expensive illusion in markets."}
+  ]},
+  { t:"The Journal's Verdict", s:"Forty journaled trades. Rule-following trades averaged +0.4R. Rule-breaking trades averaged minus 1.1R. But, and your memory will not let this go, your two biggest winners of the year were both rule-breaks.", q:"What is the governed conclusion?", hint:"Which dataset is honest: forty rows of arithmetic, or two trades your memory keeps replaying in high definition?", o:[
+    {v:"right", t:"Rule-breaking loses on average, and the two big wins are memorable exceptions. Tighten adherence, then test whether they share a pattern.", w:"Correct on both counts, and the second clause is what separates governance from rigidity. The journal's arithmetic is the only honest witness: rule-breaks lose 1.1R on average, and memory's two highlights are precisely how negative-expectancy behaviour keeps itself alive. But if those two winners share a real, repeatable pattern, the framework can audit it, test it, and perhaps promote it, through the front door, with evidence. The system stays closed to impulse and open to learning."},
+    {v:"partial", t:"Allow two discretionary trades a month as a pressure valve. Banning them completely builds tension that leads to bigger breaks later.", w:"The psychology is genuinely shrewd, forbidden behaviour does build pressure, and pressure does find exits. But a quota legitimises the leak instead of fixing it: those two monthly trades carry the same minus 1.1R expectancy as all the others, now with official permission. The governed pressure valve is different: route the impulse into a tiny, ring-fenced experimental book with its own journal, where it becomes data instead of damage."},
+    {v:"wrong", t:"The big winners show my instinct beats the system when it matters most. Loosen the rules and trust my judgement more.", w:"Danger: you are weighting 2 memorable data points above 38 boring ones, which is exactly how human memory misleads, drama weighs more than truth. The full instinct dataset is sitting in the journal and it averages minus 1.1R. The two wins were not instinct outperforming; they were variance doing what variance does inside a losing strategy: paying out occasionally, to keep you playing."},
+    {v:"fatal", t:"Forty profitable trades means the training wheels can come off. Stop journaling now, because I already know my edge.", w:"Consequence: without measurement, drift is invisible. Edges decay, markets change regime, and discipline erodes in increments too small to feel; the journal was the only instrument that could detect any of it. Six months from now the edge will be gone and you will be unable to say when, why, or which behaviour killed it. Flying blind does not fail loudly. It fails silently, then all at once."}
+  ]},
+  { t:"The Offer", s:"Two profitable years, fully documented. A wealthy friend has watched your journey and offers to ten-times your account with his money for half the profits. No paperwork, he insists, we trust each other, keep it informal.", q:"What is the governed route?", hint:"Two separate risks are hiding in one friendly sentence. One is about size. The other is about the word informal.", o:[
+    {v:"right", t:"Decline informal money. A sudden tenfold jump in size changes the pressure on every decision, and unwritten terms mean unlimited liability.", w:"Correct, and you correctly identified both threats. Size: the trader who compounds £5,000 calmly does not automatically exist at £50,000; every loss now carries a friendship inside it, and decision pressure is the variable that breaks first. Structure: 'informal' means the terms will be defined later, by whoever is angriest, usually mid-drawdown. Managing money may also carry regulatory implications that 'keeping it casual' does not erase. Serious traders scale deliberately or not at all."},
+    {v:"partial", t:"Accept, but trade it exactly as I trade now, with the same risk percentages and process. The framework works on anyone's money.", w:"The principle is beautiful and the prediction is wrong: you will not trade it the same, because you have never tested your psychology at this size with this audience. The framework may not care whose money it is. Your nervous system, watching £8,000 of a friend's £50,000 disappear in a routine drawdown he was never prepared for, cares enormously. Untested assumptions about your own behaviour are still untested, and this one is leveraged ten times."},
+    {v:"wrong", t:"Accept. The profits are real, the two-year track record is documented, he knows the risks, and overthinking a generous offer is how good opportunities die.", w:"Danger: the first serious drawdown, and two years of trading guarantees you know one is coming, now arrives with no written agreement governing it. Does he withdraw at the bottom? Demand changes? Tell mutual friends? An undocumented dispute over money costs the friendship at minimum, and informal arrangements can still produce formal legal consequences. The offer was generous. Accepting it unstructured is not."},
+    {v:"fatal", t:"Accept, and raise my risk per trade. It is not my money, so the downside is his and some aggression becomes rational.", w:"Consequence: this is moral hazard with leverage, and it is how traders end up personally owing money they never had. 'Not my money' is precisely the reasoning that dissolves every guardrail at once, and informal does not mean unenforceable: when aggressive sizing torches his capital, the absence of paperwork becomes his strongest weapon and your largest exposure. This route does not risk the account. It risks the friendship, the reputation, and the courtroom."}
+  ]},
+  { t:"The Final Question of the Code", s:"Twenty-four scenarios behind you. Strip away the charts, the volume, the macro calendar, all of it. One question remains, and it is the one the entire framework was built to answer.", q:"What is the institutional edge you have actually been training?", hint:"It was never in the charts. Re-read your own best decisions across all five levels and find what they share.", o:[
+    {v:"right", t:"The governed decision: knowing that no action is a position, that risk comes before opportunity, and that systems beat luck.", w:"Correct. This is the whole framework in one sentence. Every scenario you survived was won the same way: not by prediction, but by governance, the discipline to act only when conditions justified it and to do nothing, comfortably, when they did not. That difference is where capital survives long enough to compound. You did not learn to trade today. You learned to decide."},
+    {v:"partial", t:"Patience. The willingness to wait longer than everyone else in the market for exactly the right moment to act.", w:"Necessary, and beautifully insufficient. Patience without structure is just slow guessing, waiting longer to make the same ungoverned decision. What you trained was patience with an architecture around it: defined invalidations, sized risk, macro windows, journaled evidence. The waiting was never the edge. The framework that told you what you were waiting for, that was the edge."},
+    {v:"wrong", t:"An information advantage: better indicators, faster data feeds and deeper analysis than the retail crowd will ever have access to.", w:"Danger: this answer sends you back to the tool-acquisition treadmill, and it misreads everything you just survived. Information was abundant in every scenario; it always is. Charts are abundant, indicators endless, opinions constant, and decision quality deteriorates anyway. The institutions on the other side of your trades win on process, capital and patience. Not paint. Never paint."},
+    {v:"fatal", t:"The confidence to take bigger risks than most traders dare. The best traders are simply the boldest ones.", w:"Consequence: maximum confidence with maximum size is the retail epitaph, and it is engraved on every account this game showed you the inside of. After twenty-four scenarios demonstrating that survival flows from restraint, sizing, and the governed no, this conclusion means the framework did not land. The traders who last are not bolder. They are better governed, and that is the entire secret, hiding in plain sight."}
+  ]}
+]}
+];
+
+/* ====================== CONFIG ====================== */
+/* Paste your Google Apps Script Web App URL between the quotes below.
+   Full setup steps are in the accompanying guide. Until it is set,
+   submissions are stored safely in the player's browser only. */
+const CAPTURE_ENDPOINT = "https://script.google.com/macros/s/AKfycbzsbCsStusJR9HE8OvZjRCNTIbFvziGQtmThzMkIJeTQKI6sI54tsMcQqeb9D0D-0tU/exec";
+const SOURCE_TAG = new URLSearchParams(location.search).get("ref") || "direct";
+
+/* ====================== ENGINE ====================== */
+let progress = loadProgress();
+let G = null; // active level state
+
+function loadProgress(){
+  try{ const p = JSON.parse(localStorage.getItem("cma_game_v1")); if(p && Array.isArray(p.best)) return p; }catch(e){}
+  return { best:[null,null,null,null,null], totals:{cap:0,score:0}, captured:false };
+}
+function saveProgress(){ try{ localStorage.setItem("cma_game_v1", JSON.stringify(progress)); }catch(e){} }
+function resetAll(){ const keep = progress.captured; progress = { best:[null,null,null,null,null], totals:{cap:0,score:0}, captured:keep }; saveProgress(); renderLevels(); samSay("Clean slate. Every master was once a disaster who kept showing up. Begin again."); }
+
+/* ====================== LEAD CAPTURE ====================== */
+function showCapture(){
+  show("scr-capture");
+  document.getElementById("hud").style.visibility="hidden";
+  document.getElementById("hintBtn").style.display="none";
+  samSay("Before the Foundations level, introduce yourself. Tell me your biggest trading need and I will make sure the right material finds you.");
+}
+function submitCapture(ev){
+  ev.preventDefault();
+  const name = document.getElementById("capName").value.trim();
+  const email = document.getElementById("capEmail").value.trim();
+  const need = document.getElementById("capNeed").value;
+  const more = document.getElementById("capMore").value.trim();
+  const contactEl = document.querySelector('input[name="capContact"]:checked');
+  const ok = name.length>1 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) && need && contactEl;
+  document.getElementById("capErr").style.display = ok ? "none" : "block";
+  if(!ok) return false;
+  const lead = {
+    ts: new Date().toISOString(), name, email, need,
+    more, contact: contactEl.value, source: SOURCE_TAG, brand: "Capital Markets Academy Game",
+    level1Score: progress.best[0]===null ? "" : progress.best[0],
+    ua: navigator.userAgent.slice(0,120)
+  };
+  try{ const arr = JSON.parse(localStorage.getItem("cma_game_leads")||"[]"); arr.push(lead); localStorage.setItem("cma_game_leads", JSON.stringify(arr)); }catch(e){}
+  if(CAPTURE_ENDPOINT){
+    try{ fetch(CAPTURE_ENDPOINT, { method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(lead) }); }catch(e){}
+  }
+  progress.captured = true; saveProgress();
+  const btn = document.getElementById("capBtn");
+  btn.disabled = true; btn.textContent = "Welcome to the Inner Circle";
+  samSay("Noted, " + name.split(" ")[0] + ". Your need is logged: " + need.toLowerCase() + ". Now, Foundations. This is where most traders should have started.");
+  setTimeout(()=>startLevel(1), 1400);
+  return false;
+}
+
+/* ====================== SHARING ====================== */
+function shareGame(){
+  const url = location.href.split("?")[0].replace(/index\.html$/,"");
+  const text = "I'm taking the Capital Markets Academy trading decisions game: 5 levels, 25 decisions, 4 routes through each. One route ends the account. See how far you get:";
+  if(navigator.share){
+    navigator.share({ title:"Capital Markets Academy Game", text, url }).catch(()=>{});
+  } else {
+    window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank", "noopener");
+  }
+  samSay("Good instinct. Markets are zero sum, but education is not. Every person you send this to starts at Level I, with the same rules you played by.");
+}
+
+function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on")); document.getElementById(id).classList.add("on"); document.body.classList.toggle("in-play", !["scr-landing","scr-levels"].includes(id)); window.scrollTo({top:0,behavior:"smooth"}); }
+function fmt(n){ return "£"+Math.max(0,n).toLocaleString("en-GB"); }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+/* Sam typewriter */
+let typeTimer=null;
+function samSay(text){
+  const el = document.getElementById("samMsg");
+  clearInterval(typeTimer); el.textContent=""; el.classList.remove("donetyping");
+  let i=0;
+  typeTimer = setInterval(()=>{
+    i+=2; el.textContent = text.slice(0,i);
+    if(i>=text.length){ clearInterval(typeTimer); el.classList.add("donetyping"); }
+  },14);
+}
+
+function goLevels(){ renderLevels(); show("scr-levels");
+  samSay("Five levels. To pass one you need 70 points, Discipline of 80 or more, and no catastrophic route. Choose where you stand, and be honest about it. The market certainly will be.");
+  document.getElementById("hud").style.visibility="hidden";
+  document.getElementById("hintBtn").style.display="none";
+}
+
+function renderLevels(){
+  const g = document.getElementById("lvgrid"); g.innerHTML="";
+  LEVELS.forEach((L,i)=>{
+    const unlocked = i===0 || (progress.best[i-1]!==null && progress.best[i-1]>=PASS);
+    const best = progress.best[i];
+    const card = document.createElement("div");
+    card.className = "lvcard"+(unlocked?"":" locked");
+    card.innerHTML = `<div class="lvnum">${["I","II","III","IV","V"][i]}</div>
+      <div><span class="tag">${L.tag}</span><h3>${L.name}</h3><p>${L.sub}</p></div>
+      <div class="lvstate">${unlocked ? (best!==null ? `<span class="done">Passed · ${best}/100</span>` : "Ready") : '<span class="lock">🔒</span><br>Locked'}</div>`;
+    if(unlocked) card.onclick = ()=> (i>=1 && !progress.captured) ? showCapture() : startLevel(i);
+    g.appendChild(card);
+  });
+}
+
+function startLevel(i){
+  G = { lv:i, idx:0, cap:100000, dis:100, score:0, recap:[], hintUsed:false, fatal:false };
+  document.getElementById("gLvlTag").textContent = LEVELS[i].tag;
+  document.getElementById("gLvlName").textContent = LEVELS[i].name;
+  document.getElementById("hud").style.visibility="visible";
+  show("scr-game");
+  samSay(LEVELS[i].intro);
+  renderScenario();
+}
+
+function renderScenario(){
+  const L = LEVELS[G.lv], S = L.scenarios[G.idx];
+  G.hintUsed=false;
+  document.getElementById("gProg").textContent = `Scenario ${G.idx+1} of ${L.scenarios.length} · Score ${G.score}`;
+  document.getElementById("sTitle").textContent = S.t;
+  document.getElementById("sSituation").textContent = S.s;
+  document.getElementById("sAsk").textContent = S.q;
+  document.getElementById("verdict").classList.remove("on","v-right","v-partial","v-wrong","v-fatal");
+  document.getElementById("hintBtn").style.display="inline-block";
+  updateMeters();
+  const R = document.getElementById("sRoutes"); R.innerHTML="";
+  const order = S.o.map((o,n)=>n).sort(()=>Math.random()-0.5);
+  order.forEach((oi,k)=>{
+    const o = S.o[oi];
+    const b = document.createElement("button");
+    b.className="route";
+    b.dataset.oi = oi;
+    b.innerHTML = `<span class="key">${"ABCD"[k]}</span><span>${o.t}</span>`;
+    b.onclick = ()=>choose(oi, b);
+    R.appendChild(b);
+  });
+}
+
+function giveHint(){
+  const S = LEVELS[G.lv].scenarios[G.idx];
+  if(!G.hintUsed){ G.hintUsed=true; G.score-=HINT_PTS; G.dis=Math.max(0,G.dis-HINT_DIS); updateMeters(); }
+  samSay("Guidance, not the answer: " + S.hint);
+  document.getElementById("gProg").textContent = `Scenario ${G.idx+1} of ${LEVELS[G.lv].scenarios.length} · Score ${G.score} · guidance used (−${HINT_PTS} points, −${HINT_DIS} Discipline)`;
+}
+
+function choose(oi, btn){
+  const S = LEVELS[G.lv].scenarios[G.idx];
+  const o = S.o[oi]; const fx = FX[o.v];
+  document.querySelectorAll(".route").forEach(r=>r.disabled=true);
+  btn.classList.add("revealed","v-"+o.v);
+  G.score += fx.pts; G.cap += fx.cap; G.dis = Math.max(0,Math.min(100,G.dis+fx.dis));
+  const R = S.o.find(x=>x.v==="right");
+  G.recap.push({t:S.t, v:o.v, right:R.t});
+  if(o.v==="fatal"){ G.fatal=true; G.cap=0; }
+  updateMeters();
+  const V = document.getElementById("verdict");
+  V.classList.add("on","v-"+o.v);
+  document.getElementById("vBadge").textContent = fx.badge;
+  document.getElementById("vWhy").textContent = o.w;
+  const RV = document.getElementById("vRight");
+  if(o.v!=="right"){
+    const rb = [...document.querySelectorAll(".route")].find(r=>+r.dataset.oi===S.o.indexOf(R));
+    if(rb) rb.classList.add("revealed","v-right","is-answer");
+    RV.innerHTML = `<div class="rlabel">The governed route</div><div class="rtext"></div><div class="rwhy"></div>`;
+    RV.querySelector(".rtext").textContent = R.t;
+    RV.querySelector(".rwhy").textContent = R.w;
+    RV.style.display = "block";
+  } else { RV.style.display = "none"; RV.innerHTML = ""; }
+  document.getElementById("vDelta").textContent =
+    `Decision Capital ${fx.cap>=0?"+":"−"}${fmt(Math.abs(fx.cap)).slice(0)} · Discipline ${fx.dis>=0?"+":""}${fx.dis} · Points ${fx.pts>=0?"+":""}${fx.pts}`;
+  document.getElementById("vNext").textContent = (G.idx+1 < LEVELS[G.lv].scenarios.length) ? "Next Scenario" : "Level Debrief";
+  document.getElementById("hintBtn").style.display="none";
+  samSay(pick(SAM_REACT[o.v]));
+  if(G.fatal || G.cap<=0){
+    document.getElementById("vNext").textContent = "Restart Level";
+    samSay("That route ends the account, so it ends the level. In the live market there is no restart. Here, it is the beginning of the lesson. Read the governed route above, then go again.");
+  }
+  V.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function nextScenario(){
+  if(G.fatal || G.cap<=0){ startLevel(G.lv); return; }
+  if(G.idx+1 < LEVELS[G.lv].scenarios.length){ G.idx++; renderScenario(); }
+  else debrief();
+}
+
+function updateMeters(){
+  const capPct = Math.max(0,Math.min(100,G.cap/1000));
+  document.getElementById("mCap").style.width = capPct+"%";
+  document.getElementById("mCapTxt").textContent = fmt(G.cap);
+  document.getElementById("mDis").style.width = G.dis+"%";
+  document.getElementById("mDisTxt").textContent = G.dis;
+  document.getElementById("hudCap").textContent = fmt(G.cap);
+  document.getElementById("hudDis").textContent = G.dis;
+}
+
+function debrief(){
+  const L = LEVELS[G.lv];
+  const score = Math.max(0, G.score);
+  const passed = score>=PASS && G.dis>=DIS_PASS && !G.fatal;
+  const why = score<PASS ? `Below threshold: ${PASS} points required` : (G.dis<DIS_PASS ? `Discipline below ${DIS_PASS}: process matters as much as outcome` : "");
+  if(passed && (progress.best[G.lv]===null || score>progress.best[G.lv])) progress.best[G.lv]=score;
+  if(!passed && progress.best[G.lv]===null) progress.tried = Object.assign(progress.tried||{}, {[G.lv]:score});
+  saveProgress();
+  document.getElementById("dTag").textContent = L.tag;
+  document.getElementById("dTitle").textContent = L.name + " · Debrief";
+  document.getElementById("dScore").textContent = score + "/100";
+  const dp = document.getElementById("dPass");
+  dp.textContent = passed? "Level Passed · Governance Confirmed" : why;
+  dp.className = "passfail "+(passed?"pass":"fail");
+  const VN={right:["Right","vr"],partial:["Partial","vp"],wrong:["Wrong","vw"],fatal:["Catastrophic","vf"]};
+  const esc = x => x.replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  document.getElementById("dRecap").innerHTML = G.recap.map(r=>`<div class="row"><span>${r.t}</span><b class="${VN[r.v][1]}">${VN[r.v][0]}</b></div>` + (r.v!=="right" ? `<div class="row fix"><span>Governed route: ${esc(r.right)}</span></div>` : "")).join("")
+    + `<div class="row"><span>Closing Decision Capital</span><b>${fmt(G.cap)}</b></div>`
+    + `<div class="row"><span>Closing Discipline</span><b>${G.dis}/100</b></div>`;
+  const btns = document.getElementById("dBtns");
+  const isLast = G.lv===LEVELS.length-1;
+  const gateCapture = passed && G.lv===0 && !progress.captured;
+  btns.innerHTML = passed
+    ? (isLast ? `<button class="btn" onclick="showCert()">Claim Your Certificate</button>`
+       : gateCapture ? `<button class="btn" onclick="showCapture()">Continue · Unlock Level II</button>`
+              : `<button class="btn" onclick="startLevel(${G.lv+1})">Enter ${LEVELS[G.lv+1].name}</button> <button class="btn ghost" onclick="goLevels()">Level Map</button>`)
+    : `<button class="btn" onclick="startLevel(${G.lv})">Retry Level</button> <button class="btn ghost" onclick="goLevels()">Level Map</button>`;
+  document.getElementById("dBridge").innerHTML = passed && !isLast
+    ? L.bridge + `<br><br>Want the full framework behind these decisions? Explore <a href="https://capitalmarketsacademy.com/eit-framework/" target="_blank" rel="noopener">the EIT Framework at Capital Markets Academy</a>.`
+    : (passed ? "" : "Review the routes you took. Every wrong answer above contains the exact reason it fails. The market charges thousands for this lesson. Here it costs a retry.");
+  show("scr-debrief");
+  samSay(passed
+    ? (isLast ? "All five levels. Most people never finish what they start, let alone govern how they finish it. Claim what you earned."
+              : "Passed. Take a breath before the next level, the questions get sharper and the wrong answers get more convincing.")
+    : "Not yet, and that is fine. The retry button is the most institutional button on this screen. Losses reviewed become tuition. Losses repeated become a lifestyle.");
+}
+
+function showCert(){
+  show("scr-cert");
+  const total = progress.best.reduce((a,b)=>a+(b||0),0);
+  document.getElementById("certStats").textContent = `Cumulative Governance Score: ${total}/500 · All Five Levels Passed`;
+  samSay("Type your name and seal it. If you want the live framework these scenarios were drawn from, the programmes at Capital Markets Academy are where it is taught.");
+  document.getElementById("hud").style.visibility="hidden";
+}
+function sealCert(){
+  const n = document.getElementById("certName").value.trim() || "A Governed Decision Maker";
+  document.getElementById("certHolder").textContent = n;
+  document.getElementById("certHolder").style.display="inline-block";
+  document.getElementById("certNameWrap").style.display="none";
+}
+
+/* boot */
+samSay("I am Sam Onigbanjo, founder of Capital Markets Academy. I will not trade for you, and I will not predict for you. I will do something more valuable: I will train how you decide. Press Enter The War Room when ready.");
+</script>
+<script>
+/* Voice Agent widget fix - added 28 Jul 2026. The voice widget build no longer registers the
+   <vapi-widget> custom element; it exposes window.WidgetLoader instead. This mounts the
+   widget manually and applies the site-scoped public key. */
+(function(){
+  var KEY='588c3c02-b584-40b7-88d4-b9c291440c3d';
+  var SRC='https://unpkg.com/@vapi-ai/client-sdk-react@0.1.1/dist/embed/widget.umd.js';
+  var n=0, started=Date.now(), injected=false;
+  function camel(s){return s.replace(/-([a-z])/g,function(m,c){return c.toUpperCase();});}
+  function mount(){
+    if(typeof window.WidgetLoader!=='function') return false;
+    var els=document.querySelectorAll('vapi-widget:not([data-vapi-mounted])');
+    for(var i=0;i<els.length;i++){
+      var el=els[i], props={};
+      el.getAttributeNames().forEach(function(a){ if(a.indexOf('data-')!==0) props[camel(a)]=el.getAttribute(a); });
+      props.publicKey=KEY;
+      el.setAttribute('data-vapi-mounted','1');
+      el.innerHTML='';
+      var box=document.createElement('div'); box.id='vapi-mount-'+(++n); el.appendChild(box);
+      try{ new window.WidgetLoader({container:'#'+box.id,component:'VapiWidget',props:props}); }
+      catch(e){ console.error('[vapi-fix]',e); }
+    }
+    return true;
+  }
+  function poll(){
+    var elapsed=Date.now()-started;
+    if(typeof window.WidgetLoader!=='function'){
+      if(elapsed>4000 && !injected){
+        injected=true;
+        var s=document.createElement('script'); s.src=SRC; s.async=true;
+        s.onload=mount; document.head.appendChild(s);
+      }
+      if(elapsed<20000) return setTimeout(poll,250);
+      return console.error('[vapi-fix] WidgetLoader never appeared');
+    }
+    mount();
+    if(elapsed<20000) setTimeout(poll,500);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',poll); else poll();
+  if(typeof MutationObserver==='function'){
+    new MutationObserver(function(){ if(document.querySelector('vapi-widget:not([data-vapi-mounted])')) mount(); })
+      .observe(document.documentElement,{childList:true,subtree:true});
+  }
+})();
+</script></body>
+</html>
