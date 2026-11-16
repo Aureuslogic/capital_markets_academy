@@ -1,3 +1,10 @@
 # The game lives at its own subdomain
 /game/*  https://game.capitalmarketsacademy.com/:splat  301!
 /game    https://game.capitalmarketsacademy.com/  301!
+
+# Old WordPress addresses still known to Bing (added 16 Nov 2026)
+/learn-to-trade/ /eit-framework/ 301
+/forex-crypto-trading-courses-beginner-to-institutional-level/ / 301
+/quiz/ / 301
+/capital-markets-academy-institutional-trading-mentorship-live-signals/ / 301
+/elementor-page-40742/ / 301
