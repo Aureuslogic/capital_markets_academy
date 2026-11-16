@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Capital Markets Academy Game | Trading Decisions Under Pressure</title>
+<title>Free Trading Decisions Game | Capital Markets Academy</title>
 <link rel="canonical" href="https://game.capitalmarketsacademy.com/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="msvalidate.01" content="F947CC66A2D24EDA4C812817A4D0AAA2">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b0f14">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="description" content="The Capital Markets Academy Game: a free five level trading decisions simulator. Train the institutional edge: knowing when to act, when to wait, and why.">
@@ -12,7 +18,60 @@
 <meta property="og:url" content="https://game.capitalmarketsacademy.com/">
 <meta property="og:description" content="Five levels. Twenty five live trading decisions. Four routes through each: right, partially right, wrong, catastrophic. Can you pass the War Room?">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
+<meta property="og:site_name" content="Capital Markets Academy">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://game.capitalmarketsacademy.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Capital Markets Academy Game: trading decisions under pressure">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://game.capitalmarketsacademy.com/og-image.png">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": [
+    "WebApplication",
+    "LearningResource"
+   ],
+   "@id": "https://game.capitalmarketsacademy.com/#game",
+   "name": "The Capital Markets Academy Game",
+   "url": "https://game.capitalmarketsacademy.com/",
+   "description": "The Capital Markets Academy Game: a free five level trading decisions simulator. Train the institutional edge: knowing when to act, when to wait, and why.",
+   "applicationCategory": "EducationalApplication",
+   "operatingSystem": "Any (web browser)",
+   "inLanguage": "en-GB",
+   "isAccessibleForFree": true,
+   "learningResourceType": "Simulation",
+   "teaches": [
+    "Trading psychology",
+    "Decision making under pressure",
+    "Risk discipline"
+   ],
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "GBP"
+   },
+   "image": "https://game.capitalmarketsacademy.com/og-image.png",
+   "publisher": {
+    "@type": "EducationalOrganization",
+    "@id": "https://capitalmarketsacademy.com/#organization",
+    "name": "Capital Markets Academy",
+    "url": "https://capitalmarketsacademy.com/"
+   }
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://game.capitalmarketsacademy.com/#website",
+   "url": "https://game.capitalmarketsacademy.com/",
+   "name": "The Capital Markets Academy Game",
+   "inLanguage": "en-GB"
+  }
+ ]
+}
+</script>
 <style>
   :root{
     --navy:#0b0f14; --panel:#111820; --panel2:#0e141b; --line:rgba(255,255,255,.08);
@@ -216,7 +275,7 @@
   <section class="screen" id="scr-levels">
     <div style="margin-top:30px">
       <span class="kicker">Choose Your Level</span>
-      <h1 style="font-size:clamp(24px,4vw,36px);margin-top:14px">Five Levels of Decision Governance</h1>
+      <h2 style="font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.15;letter-spacing:.5px;font-size:clamp(24px,4vw,36px);margin:14px 0 0">Five Levels of Decision Governance</h2>
       <p style="color:var(--dim);margin-top:8px;max-width:640px">Each level holds five scenarios. To unlock the next level you need 70 points, Discipline of 80 or more, and no catastrophic route. Discipline lost in a level is not regained in that level. A catastrophic route ends the level at once. Exactly like the real thing, except here the tuition is free.</p>
       <div class="lvgrid" id="lvgrid"></div>
       <div class="centered"><button class="btn ghost" onclick="resetAll()">Reset All Progress</button></div>

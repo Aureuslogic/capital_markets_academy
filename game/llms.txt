@@ -1,0 +1,14 @@
+# The Capital Markets Academy Game
+
+> A free, browser-based trading decisions simulator from Capital Markets Academy, the UK forex and capital markets education academy. It trains judgement under pressure: knowing when to act, when to wait, and why. Educational simulation only; not financial advice.
+
+## How it works
+- Five levels, each with five scenarios: 25 trading decisions in total.
+- Four routes through each scenario: right, partially right, wrong and catastrophic.
+- To pass a level you need 70 points, Discipline of 80 or more, and no catastrophic route.
+- All capital figures, scenarios, scores and outcomes are illustrative and fictional.
+
+## Links
+- [Play the game](https://game.capitalmarketsacademy.com/)
+- [Capital Markets Academy](https://capitalmarketsacademy.com/): live forex education and trading psychology coaching
+- [What is the EIT framework?](https://capitalmarketsacademy.com/eit-framework/): the Aulteus Logic Emotionally Intelligent Trader framework behind the game

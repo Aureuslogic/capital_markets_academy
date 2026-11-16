@@ -1,0 +1,22 @@
+# The Capital Markets Academy Game: free trading decisions simulator
+# All search engines and AI answer engines are welcome.
+
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Google-Extended
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://game.capitalmarketsacademy.com/sitemap.xml
