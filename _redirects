@@ -8,3 +8,7 @@
 /quiz/ / 301
 /capital-markets-academy-institutional-trading-mentorship-live-signals/ / 301
 /elementor-page-40742/ / 301
+
+# Spam URLs from third-party links (never part of this site): tell search engines they are gone
+/shop/*      /gone.html  410!
+/netlify/*   /gone.html  410!
