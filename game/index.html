@@ -213,6 +213,29 @@
   .ferr{color:var(--red);font-size:13px;margin-top:12px;display:none}
   .fnote{font-size:11.5px;color:#6b7384;margin-top:14px;line-height:1.6}
   .centered{text-align:center;margin-top:26px}
+  /* Hero with image */
+  .hero-split{display:grid;grid-template-columns:1fr;gap:4px;text-align:center;padding:12px 0 8px;align-items:center}
+  .hero-split + .hero{padding-top:0}
+  .hero-img{order:-1;margin:0 -20px}
+  .hero-img img{display:block;width:100%;height:auto;aspect-ratio:800/688;object-fit:cover;object-position:55% 20%;max-height:250px;
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 70%,transparent 100%)}
+  .hero-copy .kicker{margin-bottom:18px}
+  .hero-split h1{font-size:clamp(32px,5.6vw,60px);line-height:1.1}
+  .hero-split p.sub{max-width:540px;margin:18px auto 0;color:#b4bcc4}
+  .hero-cta{margin-top:22px}
+  .btn-play{display:inline-flex;align-items:center;gap:12px;font-size:15px;padding:18px 40px;box-shadow:0 10px 30px rgba(47,210,140,.25)}
+  .hero-meta{margin-top:14px;font-size:13px;color:var(--dim)}
+  .linkbtn{background:none;border:none;padding:0;font:inherit;color:var(--goldL);text-decoration:underline;cursor:pointer}
+  .linkbtn:hover{color:var(--gold)}
+  @media (max-width:640px){.btn-play{width:100%;justify-content:center}.hero-split p.sub{font-size:15.5px;margin-top:14px}.hero-copy .kicker{margin-bottom:14px}}
+  @media (min-width:900px){
+    .hero-split{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);text-align:left;padding:56px 0 24px;gap:0}
+    .hero-img{order:0;margin:0 -40px 0 -60px}
+    .hero-img img{aspect-ratio:960/688;max-height:none;object-position:center;
+      -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12%,#000 75%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12%,#000 75%,transparent 100%)}
+    .hero-split p.sub{margin-left:0}
+    .hero-copy{position:relative;z-index:1}
+  }
   .route.is-answer{opacity:1;box-shadow:0 0 0 1px var(--green) inset}
   .rightbox{display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
   .rightbox .rlabel{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:var(--green);margin-bottom:6px}
@@ -254,14 +277,26 @@
 
   <!-- LANDING -->
   <section class="screen on" id="scr-landing">
-    <div class="hero">
-      <span class="kicker">The Capital Markets Academy Game</span>
-      <h1>The Market Does Not Reward Effort.<br><span class="g">It Rewards Governed Decisions.</span></h1>
-      <p class="sub">Five levels. Twenty five live decision scenarios. Four routes through every one of them: right, partially right, wrong, and catastrophically wrong. Your guide is Sam Onigbanjo, founder of Capital Markets Academy and inventor of the Aulteus Logic™ EIT™ framework. Your job isn't to predict the market. It's to make good decisions under pressure.</p>
-      <div class="centered">
-        <button class="btn" onclick="goLevels()">Play the Game</button>
-        <button class="btn ghost" onclick="shareGame()" style="margin-left:10px">Share This Game</button>
+    <div class="hero hero-split">
+      <div class="hero-copy">
+        <span class="kicker">Free trading decisions game</span>
+        <h1>Are you trading,<br><span class="g">or are your emotions?</span></h1>
+        <p class="sub">The market does not reward effort. It rewards governed decisions. Five situations will show you which kind you make.</p>
+        <div class="hero-cta">
+          <button class="btn btn-play" onclick="goLevels()">Play the Game <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+          <p class="hero-meta">Free to play. Your guide: Sam Onigbanjo. <button type="button" class="linkbtn" onclick="shareGame()">Share this game</button></p>
+        </div>
       </div>
+      <div class="hero-img">
+        <picture>
+          <source media="(max-width:899px)" type="image/webp" srcset="/hero-emotion-mobile.webp">
+          <source media="(max-width:899px)" srcset="/hero-emotion-mobile.jpg">
+          <source type="image/webp" srcset="/hero-emotion.webp">
+          <img src="/hero-emotion.jpg" width="960" height="688" alt="A trader with her hand over her face after a bad decision" fetchpriority="high" decoding="async">
+        </picture>
+      </div>
+    </div>
+    <div class="hero">
       <div class="pillars">
         <div class="pillar"><h3>Novice to Institutional</h3><p>Begin knowing nothing. Finish thinking like the desk on the other side of your trade.</p></div>
         <div class="pillar"><h3>No Action Is a Position</h3><p>Some scenarios are won by refusing to act. That is the lesson most traders pay six figures to learn.</p></div>
