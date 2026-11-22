@@ -387,7 +387,7 @@
           </div></div>
         <div class="ferr" id="capErr">Please complete your name, a valid email, your biggest need, and the contact question.</div>
         <div class="field"><button class="btn" type="submit" id="capBtn">Unlock Level II · Foundations</button></div>
-        <p class="fnote">We use your details to respond to your trading need and, only if you said yes, to contact you about Capital Markets Academy. No spam, no sharing with third parties, unsubscribe anytime. Questions about your data: <a href="mailto:sam@capitalmarketsacademy.com" style="color:var(--goldL)">sam@capitalmarketsacademy.com</a>. Read our <a href="https://capitalmarketsacademy.com/privacy-policy/" target="_blank" rel="noopener" style="color:var(--goldL)">Privacy Policy</a>.</p>
+        <p class="fnote">We use your details to respond to your trading need and, only if you said yes, to contact you about Capital Markets Academy. No spam, no sharing with third parties, unsubscribe anytime. Game results are recorded anonymously and are never linked to these details. Questions about your data: <a href="mailto:sam@capitalmarketsacademy.com" style="color:var(--goldL)">sam@capitalmarketsacademy.com</a>. Read our <a href="https://capitalmarketsacademy.com/privacy-policy/" target="_blank" rel="noopener" style="color:var(--goldL)">Privacy Policy</a>.</p>
       </form>
     </div>
   </section>
@@ -412,7 +412,7 @@
   </section>
 
   <footer class="legal">
-    <b>Important.</b> The Capital Markets Academy Game is an educational simulation. All capital figures, scenarios, scores and outcomes are illustrative and fictional. Nothing here is investment advice, a personal recommendation, or an invitation to trade. Capital Markets Academy provides education and is not a trading platform, broker, or regulated advisory service. Trading foreign exchange, commodities and indices carries a high level of risk and most retail participants lose money. If you choose to trade, you alone are responsible for your decisions.<br><br>Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.<br><br>© 2026 Capital Markets Academy · Aulteus Logic™ and EIT™ are trademarks of Sam Onigbanjo. · <a href="https://capitalmarketsacademy.com/privacy-policy/" target="_blank" rel="noopener" style="color:var(--goldL)">Privacy Policy</a>
+    <b>Important.</b> The Capital Markets Academy Game is an educational simulation. All capital figures, scenarios, scores and outcomes are illustrative and fictional. To improve the game and publish aggregate findings, we record anonymous results for each level played (the routes chosen and scores). Nothing is stored on your device for this, and no name, email or device details are recorded. Nothing here is investment advice, a personal recommendation, or an invitation to trade. Capital Markets Academy provides education and is not a trading platform, broker, or regulated advisory service. Trading foreign exchange, commodities and indices carries a high level of risk and most retail participants lose money. If you choose to trade, you alone are responsible for your decisions.<br><br>Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.<br><br>© 2026 Capital Markets Academy · Aulteus Logic™ and EIT™ are trademarks of Sam Onigbanjo. · <a href="https://capitalmarketsacademy.com/privacy-policy/" target="_blank" rel="noopener" style="color:var(--goldL)">Privacy Policy</a>
   </footer>
 </div>
 
@@ -665,6 +665,36 @@ const LEVELS = [
    submissions are stored safely in the player's browser only. */
 const CAPTURE_ENDPOINT = "https://script.google.com/macros/s/AKfycbzsbCsStusJR9HE8OvZjRCNTIbFvziGQtmThzMkIJeTQKI6sI54tsMcQqeb9D0D-0tU/exec";
 const SOURCE_TAG = new URLSearchParams(location.search).get("ref") || "direct";
+/* Anonymous play analytics. Leave empty to switch off. Must be a SEPARATE Apps Script
+   from CAPTURE_ENDPOINT so play records never touch the leads sheet. Nothing is stored
+   on the player's device for this: the session ID lives in memory only. */
+const EVENTS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwKczyIunsYjaEK-ooWRBVUl_pFptWnkImRoT_UpYJdnm6ccpKWuspAMwj5wf_1GOFbHQ/exec";
+
+/* ====================== ANONYMOUS RESULTS ====================== */
+const SESSION_ID = Math.random().toString(36).slice(2,10);
+const SESSION_ATTEMPTS = [0,0,0,0,0];
+let sessionPlayed = 0;
+function sendResult(outcome){
+  if(!EVENTS_ENDPOINT || !G || G.logged) return;
+  G.logged = true;
+  try{
+    SESSION_ATTEMPTS[G.lv]++; sessionPlayed++;
+    const code = {right:"R",partial:"P",wrong:"W",fatal:"F"};
+    const rec = {
+      type:"level_result", v:2, ts:new Date().toISOString(), session:SESSION_ID,
+      level:G.lv+1, attempt:SESSION_ATTEMPTS[G.lv], levelsThisSession:sessionPlayed, outcome,
+      answered:G.recap.length, scenarios:LEVELS[G.lv].scenarios.length,
+      points:Math.max(0,G.score), discipline:G.dis, hints:G.hints||0,
+      routes:" " + G.recap.map((r,i)=>(i+1)+"."+r.oi+code[r.v]+(r.hint?"h":"")).join(" ") + " ",
+      secs:Math.round((Date.now()-G.t0)/1000), source:SOURCE_TAG.slice(0,40)
+    };
+    const body = JSON.stringify(rec);
+    if(outcome==="abandoned" && navigator.sendBeacon){ navigator.sendBeacon(EVENTS_ENDPOINT, new Blob([body],{type:"text/plain;charset=utf-8"})); }
+    else fetch(EVENTS_ENDPOINT, { method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body, keepalive:true });
+  }catch(e){}
+}
+/* A level left part-way (tab closed, Exit Level, or a new level started) is logged as abandoned. */
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden" && G && !G.logged && G.recap.length>0) sendResult("abandoned"); });
 
 /* ====================== ENGINE ====================== */
 let progress = loadProgress();
@@ -740,7 +770,7 @@ function samSay(text){
   },14);
 }
 
-function goLevels(){ renderLevels(); show("scr-levels");
+function goLevels(){ if(G && !G.logged && G.recap.length>0) sendResult("abandoned"); renderLevels(); show("scr-levels");
   samSay("Five levels. To pass one you need 70 points, Discipline of 80 or more, and no catastrophic route. Choose where you stand, and be honest about it. The market certainly will be.");
   document.getElementById("hud").style.visibility="hidden";
   document.getElementById("hintBtn").style.display="none";
@@ -762,7 +792,8 @@ function renderLevels(){
 }
 
 function startLevel(i){
-  G = { lv:i, idx:0, cap:100000, dis:100, score:0, recap:[], hintUsed:false, fatal:false };
+  if(G && !G.logged && G.recap.length>0) sendResult("abandoned");
+  G = { lv:i, idx:0, cap:100000, dis:100, score:0, recap:[], hintUsed:false, fatal:false, hints:0, logged:false, t0:Date.now() };
   document.getElementById("gLvlTag").textContent = LEVELS[i].tag;
   document.getElementById("gLvlName").textContent = LEVELS[i].name;
   document.getElementById("hud").style.visibility="visible";
@@ -796,7 +827,7 @@ function renderScenario(){
 
 function giveHint(){
   const S = LEVELS[G.lv].scenarios[G.idx];
-  if(!G.hintUsed){ G.hintUsed=true; G.score-=HINT_PTS; G.dis=Math.max(0,G.dis-HINT_DIS); updateMeters(); }
+  if(!G.hintUsed){ G.hintUsed=true; G.hints=(G.hints||0)+1; G.score-=HINT_PTS; G.dis=Math.max(0,G.dis-HINT_DIS); updateMeters(); }
   samSay("Guidance, not the answer: " + S.hint);
   document.getElementById("gProg").textContent = `Scenario ${G.idx+1} of ${LEVELS[G.lv].scenarios.length} · Score ${G.score} · guidance used (−${HINT_PTS} points, −${HINT_DIS} Discipline)`;
 }
@@ -808,7 +839,7 @@ function choose(oi, btn){
   btn.classList.add("revealed","v-"+o.v);
   G.score += fx.pts; G.cap += fx.cap; G.dis = Math.max(0,Math.min(100,G.dis+fx.dis));
   const R = S.o.find(x=>x.v==="right");
-  G.recap.push({t:S.t, v:o.v, right:R.t});
+  G.recap.push({t:S.t, v:o.v, right:R.t, hint:G.hintUsed, oi});
   if(o.v==="fatal"){ G.fatal=true; G.cap=0; }
   updateMeters();
   const V = document.getElementById("verdict");
@@ -830,6 +861,7 @@ function choose(oi, btn){
   document.getElementById("hintBtn").style.display="none";
   samSay(pick(SAM_REACT[o.v]));
   if(G.fatal || G.cap<=0){
+    sendResult("catastrophic");
     document.getElementById("vNext").textContent = "Restart Level";
     samSay("That route ends the account, so it ends the level. In the live market there is no restart. Here, it is the beginning of the lesson. Read the governed route above, then go again.");
   }
@@ -858,6 +890,7 @@ function debrief(){
   const passed = score>=PASS && G.dis>=DIS_PASS && !G.fatal;
   const why = score<PASS ? `Below threshold: ${PASS} points required` : (G.dis<DIS_PASS ? `Discipline below ${DIS_PASS}: process matters as much as outcome` : "");
   if(passed && (progress.best[G.lv]===null || score>progress.best[G.lv])) progress.best[G.lv]=score;
+  sendResult(passed?"passed":"failed");
   if(!passed && progress.best[G.lv]===null) progress.tried = Object.assign(progress.tried||{}, {[G.lv]:score});
   saveProgress();
   document.getElementById("dTag").textContent = L.tag;
