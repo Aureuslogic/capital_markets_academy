@@ -14,18 +14,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="description" content="The Capital Markets Academy Game: a free five level trading decisions simulator. Train the institutional edge: knowing when to act, when to wait, and why.">
-<meta property="og:title" content="The Capital Markets Academy Game">
+<meta property="og:title" content="Are you trading, or are your emotions?">
 <meta property="og:url" content="https://game.capitalmarketsacademy.com/">
-<meta property="og:description" content="Five levels. Twenty five live trading decisions. Four routes through each: right, partially right, wrong, catastrophic. Can you pass the War Room?">
+<meta property="og:description" content="A free trading decisions game from Capital Markets Academy. Five situations, four routes each. Find out which kind of decisions you make.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Capital Markets Academy">
 <meta property="og:locale" content="en_GB">
-<meta property="og:image" content="https://game.capitalmarketsacademy.com/og-image.png">
+<meta property="og:image" content="https://game.capitalmarketsacademy.com/og-image-v2.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Capital Markets Academy Game: trading decisions under pressure">
+<meta property="og:image:alt" content="Are you trading, or are your emotions? Play the free Capital Markets Academy game">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://game.capitalmarketsacademy.com/og-image.png">
+<meta name="twitter:image" content="https://game.capitalmarketsacademy.com/og-image-v2.jpg">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -260,9 +260,11 @@
   }
   /* Voice Agent widget, bottom-right */
   vapi-widget{--vapi-widget-z-index:50}
+  body.on-landing .sam{display:none}
+  body.on-landing .wrap{padding-bottom:60px}
 </style>
 </head>
-<body>
+<body class="on-landing">
 <div class="wrap">
   <header class="app">
     <div class="logo">
@@ -299,7 +301,7 @@
     <div class="hero">
       <div class="pillars">
         <div class="pillar"><h3>Novice to Institutional</h3><p>Begin knowing nothing. Finish thinking like the desk on the other side of your trade.</p></div>
-        <div class="pillar"><h3>No Action Is a Position</h3><p>Some scenarios are won by refusing to act. That is the lesson most traders pay six figures to learn.</p></div>
+        <div class="pillar"><h3>No Action Is a Position</h3><p>Some scenarios are won by refusing to act. Most traders learn that the expensive way.</p></div>
         <div class="pillar"><h3>Two Scores, One Truth</h3><p>Points measure outcomes. Discipline measures process. To pass a level you need both: 70 points and Discipline of 80 or more.</p></div>
         <div class="pillar"><h3>One Route Ends It</h3><p>Choose a catastrophic route and the level ends on the spot, as it would in a live account. After every choice you see the governed route and why.</p></div>
       </div>
@@ -385,7 +387,7 @@
           </div></div>
         <div class="ferr" id="capErr">Please complete your name, a valid email, your biggest need, and the contact question.</div>
         <div class="field"><button class="btn" type="submit" id="capBtn">Unlock Level II · Foundations</button></div>
-        <p class="fnote">We use your details to respond to your trading need and, only if you said yes, to contact you about Capital Markets Academy. No spam, no sharing with third parties, unsubscribe anytime. Questions about your data: <a href="mailto:sam@capitalmarketsacademy.com" style="color:var(--goldL)">sam@capitalmarketsacademy.com</a>.</p>
+        <p class="fnote">We use your details to respond to your trading need and, only if you said yes, to contact you about Capital Markets Academy. No spam, no sharing with third parties, unsubscribe anytime. Questions about your data: <a href="mailto:sam@capitalmarketsacademy.com" style="color:var(--goldL)">sam@capitalmarketsacademy.com</a>. Read our <a href="https://capitalmarketsacademy.com/privacy-policy/" target="_blank" rel="noopener" style="color:var(--goldL)">Privacy Policy</a>.</p>
       </form>
     </div>
   </section>
@@ -410,7 +412,7 @@
   </section>
 
   <footer class="legal">
-    <b>Important.</b> The Capital Markets Academy Game is an educational simulation. All capital figures, scenarios, scores and outcomes are illustrative and fictional. Nothing here is investment advice, a personal recommendation, or an invitation to trade. Capital Markets Academy provides education and is not a trading platform, broker, or regulated advisory service. Trading foreign exchange, commodities and indices carries a high level of risk and most retail participants lose money. If you choose to trade, you alone are responsible for your decisions.<br><br>Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.<br><br>© 2026 Capital Markets Academy · Aulteus Logic™ and EIT™ are trademarks of Sam Onigbanjo.
+    <b>Important.</b> The Capital Markets Academy Game is an educational simulation. All capital figures, scenarios, scores and outcomes are illustrative and fictional. Nothing here is investment advice, a personal recommendation, or an invitation to trade. Capital Markets Academy provides education and is not a trading platform, broker, or regulated advisory service. Trading foreign exchange, commodities and indices carries a high level of risk and most retail participants lose money. If you choose to trade, you alone are responsible for your decisions.<br><br>Educational content only. Not financial advice. Trading carries risk of loss. Past performance does not indicate future results.<br><br>© 2026 Capital Markets Academy · Aulteus Logic™ and EIT™ are trademarks of Sam Onigbanjo. · <a href="https://capitalmarketsacademy.com/privacy-policy/" target="_blank" rel="noopener" style="color:var(--goldL)">Privacy Policy</a>
   </footer>
 </div>
 
@@ -438,8 +440,8 @@
   border-radius="large"
   base-bg-color="#111820"
   accent-color="#2fd28c"
-  cta-button-color="#2fd28c"
-  cta-button-text-color="#06130c"
+  cta-button-color="#111820"
+  cta-button-text-color="#7ee6b8"
   title="Talk to the Academy"
   cta-title="Talk to the Academy"
   cta-subtitle="Ask about the game, programmes and free sessions"
@@ -722,7 +724,7 @@ function shareGame(){
   samSay("Good instinct. Markets are zero sum, but education is not. Every person you send this to starts at Level I, with the same rules you played by.");
 }
 
-function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on")); document.getElementById(id).classList.add("on"); document.body.classList.toggle("in-play", !["scr-landing","scr-levels"].includes(id)); window.scrollTo({top:0,behavior:"smooth"}); }
+function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on")); document.getElementById(id).classList.add("on"); document.body.classList.toggle("in-play", !["scr-landing","scr-levels"].includes(id)); document.body.classList.toggle("on-landing", id==="scr-landing"); window.scrollTo({top:0,behavior:"smooth"}); }
 function fmt(n){ return "£"+Math.max(0,n).toLocaleString("en-GB"); }
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
